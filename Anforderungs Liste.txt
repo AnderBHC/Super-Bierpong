@@ -1,0 +1,14 @@
+Taster
+	umstellen Team A
+	Umstellen Team B
+	Bierpong / Flipcup
+
+Bierpong:
+	Spielmodie normales Umstellen
+		Dreieck > Blume > Raute > Aus
+
+	Spielmodi 2
+		Zufälliger Becher leuchtet auf und wird nach dem Umstellen aus dem Spiel genommen. Neuer zufälliger Becher leuchtet auf. Bis alle weg.
+
+Flipcup:
+	Seiten Linien an.
