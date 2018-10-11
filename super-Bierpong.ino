@@ -49,7 +49,7 @@ void loop() {
 		for (int j = 0;j<4;j++){
 			StreifenBierpongA.setPixelColor(FeldA[i][j],255,255,255);
 		}
-		StreifenBierpongA.show()
+		StreifenBierpongA.show();
 		delay(1000);
 		for (int k = 0;k<4;k++){
 			StreifenBierpongA.setPixelColor(FeldA[i][k],0,0,0);
@@ -60,22 +60,22 @@ void loop() {
 //  umstellenB = ButtonUmstellenB.update();
 
  switch (Modus){
-    case(0){
+    case(0):
       Bierpong();
       break;
-    }
-    case(2){
+
+    case(2):
       Kingscup();
       break;
-    }
-    case(1){
+    
+    case(1):
       Rainbow();
       break;
-    }
-    case(3){
+    
+    case(3):
       Flipcup();
       break;
-    }  
+    
   }
 }
 void Bierpong(){

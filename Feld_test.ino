@@ -12,7 +12,7 @@ void setup(){
 void loop(){
 	for (int i = 0; i<10; i++){
 		for (int j = 0;j<4;j++){
-			Strip.setPixelColor(FeldA[i][j],255,255,255);
+			Strip.setPixelColor(FeldA[i][j],RainbowRot(i*77),RainbowGruen(i*77),RainbowBlau(i*77));
 		}
 		Strip.show();
 		delay(1000);
@@ -21,3 +21,46 @@ void loop(){
 		}
 	}
 }
+
+byte RainbowRot(unsigned int offset){
+	int c=offset%768;
+	byte rot = 0;
+	if (c<256){
+		rot=255-c;
+	}
+	else if (c<512){
+		rot = 0;
+	}
+	else{
+		rot = c-512;
+	}
+	return {rot};
+}
+byte RainbowGruen(unsigned int offset){
+	int c=offset%768;
+	byte gruen = 0;
+	if (c<256){
+		gruen=c;
+	}
+	else if (c<512){
+		gruen = 512-c;
+	}
+	else{
+		gruen = 0;
+	}
+	return {gruen};
+} 
+byte RainbowBlau(unsigned int offset){
+	int c=offset%768;
+	byte blau = 0;
+	if (c<256){
+		blau = 0;
+	}
+	else if (c<512){
+		blau =  c-256;
+	}
+	else{
+		blau = 512-c;
+	}
+	return {blau};
+} 
