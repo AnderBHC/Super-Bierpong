@@ -45,16 +45,7 @@ void setup() {
 }
 
 void loop() {
-	for (int i = 0; i<10; i++){
-		for (int j = 0;j<4;j++){
-			StreifenBierpongA.setPixelColor(FeldA[i][j],255,255,255);
-		}
-		StreifenBierpongA.show();
-		delay(1000);
-		for (int k = 0;k<4;k++){
-			StreifenBierpongA.setPixelColor(FeldA[i][k],0,0,0);
-		}
-	}
+
 //  modusButton = ButtonModus.update();
 //  umstellenA = ButtonUmstellenA.update();
 //  umstellenB = ButtonUmstellenB.update();
