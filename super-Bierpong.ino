@@ -128,7 +128,7 @@ void Rainbow(){
   }
 void Flipcup(){
 	for (int i = 0; i < 95; i++){
-		int offset = i*768/95;
+		long unsigned int offset = i*768/95*millis()/1000;
 		StreifenFlipcup1.setPixelColor(i,RainbowRot(offset),RainbowGruen(offset),RainbowBlau(offset));
 		StreifenFlipcup2.setPixelColor(94-i,RainbowRot(offset),RainbowGruen(offset),RainbowBlau(offset));
 	}
