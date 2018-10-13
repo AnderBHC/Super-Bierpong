@@ -31,17 +31,19 @@ int TeamB = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
 
 byte FeldA[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{15,14,0,1},{13,14,2,3},{11,10,4,5},{9,8,6,7}};
 byte FeldB[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{15,14,7,6},{13,12,5,4},{11,10,3,2},{9,8,1,0}};
-
+byte Blume[11]={0,1,1,1,1,1,0,1,1,0};
+byte Diamant[11]={1,1,1,0,1,0,0,0,0,0};
+			   
 void setup() {
-  StreifenFlipcup1.begin();
-  StreifenFlipcup2.begin();
-  StreifenBierpongA.begin();
-  StreifenBierpongB.begin();
+	StreifenFlipcup1.begin();
+	StreifenFlipcup2.begin();
+	StreifenBierpongA.begin();
+	StreifenBierpongB.begin();
 
-  StreifenFlipcup1.show();
-  StreifenFlipcup2.show();
-  StreifenBierpongA.show();
-  StreifenBierpongB.show();
+	StreifenFlipcup1.show();
+	StreifenFlipcup2.show();
+	StreifenBierpongA.show();
+	StreifenBierpongB.show();
 }
 
 void loop() {
@@ -50,7 +52,7 @@ void loop() {
 //  umstellenA = ButtonUmstellenA.update();
 //  umstellenB = ButtonUmstellenB.update();
 
- switch (Modus){
+/* switch (Modus){
     case(0):
       Bierpong();
       break;
@@ -67,16 +69,112 @@ void loop() {
       Flipcup();
       break;
     
-  }
+	} */
+	Bierpong();
+	Flipcup();
+	StreifenFlipcup1.show();
+	StreifenFlipcup2.show();
+	StreifenBierpongA.show();
+	StreifenBierpongB.show();
+	
 }
+
 void Bierpong(){
-  }
+	switch (TeamA){
+		case(0):
+			for (int i = 0; i<10; i++){
+				for ( int j = 0; j < 4; j++){
+					StreifenBierpongA.setPixelColor(FeldA[i][j], 0, 255, 0);
+			}
+		}
+		case(1):
+			for ( int i = 0; i < 10; i++ ){
+				for ( int j = 0; j < 4; j++){
+					StreifenBierpongA.setPixelColor(FeldA[i][j], 127*Blume[i], 127*Blume[i], 0);
+				}
+			}
+		case(2):
+			for ( int i = 0; i < 10; i++ ){
+				for ( int j = 0; j < 4; j++){
+					StreifenBierpongA.setPixelColor(FeldA[i][j], 127*Diamant[i], 127*Diamant[i], 0);
+				}
+			}
+	
+	}
+	switch (TeamB){
+		case(0):
+			for (int i = 0; i<10; i++){
+				for ( int j = 0; j < 4; j++){
+					StreifenBierpongB.setPixelColor(FeldB[i][j], 0, 255, 0);
+			}
+		}
+		case(1):
+			for ( int i = 0; i < 10; i++ ){
+				for ( int j = 0; j < 4; j++){
+					StreifenBierpongB.setPixelColor(FeldB[i][j], 127*Blume[i], 127*Blume[i], 0);
+				}
+			}
+		case(2):
+			for ( int i = 0; i < 10; i++ ){
+				for ( int j = 0; j < 4; j++){
+					StreifenBierpongB.setPixelColor(FeldB[i][j], 127*Diamant[i], 127*Diamant[i], 0);
+				}
+			}
+	}
+}
 void Kingscup(){
   }
 void Rainbow(){
   }
 void Flipcup(){
-  }
+	for (int i = 0; i < 95; i++){
+		int offset = i*768/95;
+		StreifenFlipcup1.setPixelColor(i,RainbowRot(offset),RainbowGruen(offset),RainbowBlau(offset));
+		StreifenFlipcup2.setPixelColor(94-i,RainbowRot(offset),RainbowGruen(offset),RainbowBlau(offset));
+	}
+}
 
+byte RainbowRot(unsigned int offset){
+  int c=offset%768;
+  byte rot = 0;
+  if (c<256){
+    rot=255-c;
+  }
+  else if (c<512){
+    rot = 0;
+  }
+  else{
+    rot = c-512;
+  }
+  return {rot};
+}
+byte RainbowGruen(unsigned int offset){
+  int c=offset%768;
+  byte gruen = 0;
+  if (c<256){
+    gruen=c;
+  }
+  else if (c<512){
+    gruen = 511-c;
+  }
+  else{
+    gruen = 0;
+  }
+  return {gruen};
+} 
+byte RainbowBlau(unsigned int offset){
+  int c=offset%768;
+  byte blau = 0;
+  if (c<256){
+    blau = 0;
+  }
+  else if (c<512){
+    blau =  c-256;
+  }
+  else{
+    blau = 512-c;
+  }
+  return {blau};
+}
 
 
