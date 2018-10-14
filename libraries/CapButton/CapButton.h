@@ -7,18 +7,18 @@ Libary for reading capacitive Buttons
 #include "Arduino.h"
 #include "CapacitiveSensor.h"
 
-class Button
+class CapButton
 {
   public:
-    Button(int pinread,pinsend);
+    CapButton(uint8_t pinread, uint8_t pinsend, unsigned int tresshold);
 	int update();
   private:
-	CapacitiveSensor Sensor;
-	int _treshhold;
-    int _pinread;
-	int _pinsend;
-    int oldstate;
-    long lastDebounce;
+	CapacitiveSensor& Sensor;
+	unsigned int _treshhold;
+  uint8_t _pinRead;
+	uint8_t _pinSend;
+  int oldstate;
+  long lastDebounce;
 	long clickStart;
 	boolean clickEnded;
 	boolean longclicked;

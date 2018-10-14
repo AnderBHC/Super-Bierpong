@@ -1,2 +1,2 @@
-Button	KEYWORD1
+CapButton	KEYWORD1
 update	KEYWORD2

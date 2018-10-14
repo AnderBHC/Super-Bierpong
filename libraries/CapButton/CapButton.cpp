@@ -1,11 +1,11 @@
 #include "Arduino.h"
-#include "Button.h"
+#include "CapButton.h"
+#include "CapacitiveSensor.h"
 
-Button::Button(int pinread, int pinsend){
-	Sensor=CapacitiveSensor(pinsend, pinread,treshhold);
-	_pinread = pinread;
-	_pinsend = pinsend;
-	_treshhold =treshhold;
+CapButton::CapButton(uint8_t pinRead, uint8_t pinSend, unsigned int treshhold){
+	_pinRead = pinRead;
+	_pinSend = pinSend;
+	_treshhold = treshhold;
 	lastDebounce = 0;
 	oldstate = LOW;
 	clickStart = 0;
@@ -13,12 +13,13 @@ Button::Button(int pinread, int pinsend){
 	longclicked = false;
 	lastClick = 0;
 	debouncetime = 100;
+	CapacitiveSensor Sensor= CapacitiveSensor (_pinSend, _pinRead);
 }
 
-int Button::update(){
+int CapButton::update(){
 	int state = LOW;
-	if (Sensor.capacitiveSensor(30)>_treshhold){
-		state=HIGH;		
+	if (Sensor.capacitiveSensor(30) > _treshhold){
+		state=HIGH;
 	}
 
 	//steigende flanke
@@ -28,11 +29,11 @@ int Button::update(){
 		clickEnded = false;
 		return 0;
 	}
-	//Prüft, ob ein klicken + halten da ist. 
+	//Prüft, ob ein klicken + halten da ist.
 	if (state == HIGH && clickEnded == false && millis() - clickStart > 500 && longclicked == false){
 		longclicked = true;
 		return 2;
-		
+
 	}
 	//fallende flanke
 	if (state == LOW && clickEnded == false && millis() - lastDebounce > debouncetime){
@@ -50,10 +51,10 @@ int Button::update(){
 			return 1;
 		}
 	}
-	
+
 	if (state!=oldstate){
 		lastDebounce = millis();
-		oldstate=state;		
+		oldstate=state;
 	}
 	return 0;
 }
