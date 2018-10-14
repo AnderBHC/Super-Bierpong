@@ -1,4 +1,4 @@
-#include <Button.h>
+#include <CapButton.h>
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
   #include <avr/power.h>
@@ -52,26 +52,25 @@ void loop() {
 //  umstellenA = ButtonUmstellenA.update();
 //  umstellenB = ButtonUmstellenB.update();
 
-/* switch (Modus){
-    case(0):
-      Bierpong();
-      break;
+	switch (Modus){
+		case(0):
+			Bierpong();
+			break;
 
-    case(2):
-      Kingscup();
-      break;
-    
-    case(1):
-      Rainbow();
-      break;
-    
-    case(3):
-      Flipcup();
-      break;
-    
-	} */
-	Bierpong();
-	Flipcup();
+		case(2):
+			Kingscup();
+			break;
+		
+		case(1):
+			Rainbow();
+			break;
+		
+		case(3):
+			Flipcup();
+			break;
+		
+	}
+
 	StreifenFlipcup1.show();
 	StreifenFlipcup2.show();
 	StreifenBierpongA.show();
@@ -96,7 +95,7 @@ void Bierpong(){
 		case(2):
 			for ( int i = 0; i < 10; i++ ){
 				for ( int j = 0; j < 4; j++){
-					StreifenBierpongA.setPixelColor(FeldA[i][j], 127*Diamant[i], 127*Diamant[i], 0);
+					StreifenBierpongA.setPixelColor(FeldA[i][j], 255*Diamant[i], 0, 0);
 				}
 			}
 	
@@ -128,53 +127,44 @@ void Rainbow(){
   }
 void Flipcup(){
 	for (int i = 0; i < 95; i++){
-		long unsigned int offset = i*768/95*millis()/1000;
+		long unsigned int offset = i*768*millis()/(1000*95);
 		StreifenFlipcup1.setPixelColor(i,RainbowRot(offset),RainbowGruen(offset),RainbowBlau(offset));
 		StreifenFlipcup2.setPixelColor(94-i,RainbowRot(offset),RainbowGruen(offset),RainbowBlau(offset));
 	}
 }
 
 byte RainbowRot(unsigned int offset){
-  int c=offset%768;
+  int c=offset%765;
   byte rot = 0;
-  if (c<256){
+  if (c>=0 && c<=255){
     rot=255-c;
   }
-  else if (c<512){
-    rot = 0;
+  if (c>510 and <= 765){
+    rot = c-510;
   }
-  else{
-    rot = c-512;
-  }
-  return {rot};
+  return rot;
 }
 byte RainbowGruen(unsigned int offset){
-  int c=offset%768;
+  int c=offset%765;
   byte gruen = 0;
-  if (c<256){
+  if (c>=0 && c<=255){
     gruen=c;
   }
-  else if (c<512){
-    gruen = 511-c;
+  if (c>255 && c<510){
+    gruen = 510-c;
   }
-  else{
-    gruen = 0;
-  }
-  return {gruen};
+  return gruen;
 } 
 byte RainbowBlau(unsigned int offset){
-  int c=offset%768;
+  int c=offset%765;
   byte blau = 0;
-  if (c<256){
-    blau = 0;
+  if (c>=256 && c<510){
+    blau =  c-255;
   }
-  else if (c<512){
-    blau =  c-256;
+	if (c>=510&& <765){
+    blau = 765-c;
   }
-  else{
-    blau = 512-c;
-  }
-  return {blau};
+  return blau;
 }
 
 
