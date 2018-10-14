@@ -27,16 +27,19 @@ Adafruit_NeoPixel StreifenBierpongA = Adafruit_NeoPixel (40, PinStreifen3, NEO_R
 Adafruit_NeoPixel StreifenBierpongB = Adafruit_NeoPixel (40, PinStreifen4, NEO_RGB + NEO_KHZ800);
 
 //Konstruktor für die Taster (pinread, pinsend, tresshold)
-CapButton ButtonModus = CapButton(PinButtonModus,PinCapacitiveSender,1000);
-CapButton ButtonUmstellenA = CapButton(PinButtonUmstellenA,PinCapacitiveSender,1000);
-CapButton ButtonUmstellenB = CapButton(PinButtonUmstellenB,PinCapacitiveSender,1000);
+CapButton ButtonModus = CapButton(PinButtonModus,PinCapacitiveSender);
+CapButton ButtonUmstellenA = CapButton(PinButtonUmstellenA,PinCapacitiveSender);
+CapButton ButtonUmstellenB = CapButton(PinButtonUmstellenB,PinCapacitiveSender);
 
 int Modus = 0; //0 Bierpong normal | 1 Bierpong Rainbow |  2 Bierpong Kings Cup | 3 Flipcup
 int PunkteTeamA = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
 int PunkteTeamB = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
 
+//addressern der Pixel in den einzelnen Bierpong Leuchtfeldern von oben nach unten von links nach rechts
 byte FeldA[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{15,14,0,1},{13,14,2,3},{11,10,4,5},{9,8,6,7}};
 byte FeldB[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{15,14,7,6},{13,12,5,4},{11,10,3,2},{9,8,1,0}};
+
+//faktoren für einzelne Bierpong felder nach dem umstellen
 byte Blume[11]={0,1,1,1,1,1,0,1,1,0};
 byte Diamant[11]={1,1,1,0,1,0,0,0,0,0};
 
@@ -54,6 +57,7 @@ void setup() {
 
 void loop() {
 
+//verarbeitung der eingabe der Kapizitativen Taster
 	int stateModusButton = ButtonModus.update();
 	int stateUmstellenA = ButtonUmstellenA.update();
 	int stateUmstellenB = ButtonUmstellenB.update();
@@ -150,10 +154,18 @@ void Bierpong(){
 void Kingscup(){
   }
 void Rainbow(){
+  for(int i = 0; i < 10; i++){
+    for(int j = 0; j < 4; j++){
+      int offset = i*766/10;
+      StreifenBierpongA.setPixelColor(FeldA[i][j], RainbowRot(offset), RainbowGruen(offset), RainbowBlau(offset));
+      StreifenBierpongB.setPixelColor(FeldB[i][j], RainbowRot(offset), RainbowGruen(offset), RainbowBlau(offset));
+      Flipcup();
+    }
+  }
   }
 void Flipcup(){
 	for (int i = 0; i < 95; i++){
-		long unsigned int offset = i*768*millis()/(1000*95);
+		long unsigned int offset = i*766*millis()/(1000*95);
 		StreifenFlipcup1.setPixelColor(i, RainbowRot(offset) ,RainbowGruen(offset), RainbowBlau(offset));
 		StreifenFlipcup2.setPixelColor(94-i, RainbowRot(offset), RainbowGruen(offset), RainbowBlau(offset));
 	}
