@@ -8,10 +8,11 @@ Bierpong:
 		Dreieck > Blume > Raute > Aus
 
 	Spielmodi Kingscup
-		Zufälliger Becher leuchtet auf und wird nach dem Umstellen aus dem Spiel genommen. Neuer zufälliger Becher leuchtet auf. Bis alle weg.
-	
-	Rainbow
-		wie normales aber mit durchlaufenden regenbogen farben
+		Zufälliger Becher leuchtet auf und wird nach dem Umstellen aus dem Spiel genommen.
+		Neuer zufälliger Becher leuchtet auf. Bis alle weg.
 
+	Rainbow Bierpong
+		wie normales aber mit durchlaufenden regenbogen farben
+		Seiten Linien an.
 Flipcup:
 	Seiten Linien an.
