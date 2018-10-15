@@ -65,6 +65,7 @@ void setup() {
 void loop() {
 
 //verarbeitung der eingabe der Kapizitativen Taster
+//0 keine eingabe | 1 normaler klick | 2 klicken + halten | 3 doppel klick
   stateModusButton = ButtonModus.update();
 	stateUmstellenButtonA = ButtonUmstellenA.update();
 	stateUmstellenButtonB = ButtonUmstellenB.update();

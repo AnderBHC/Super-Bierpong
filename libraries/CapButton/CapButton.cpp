@@ -23,12 +23,12 @@ int CapButton::update(){
 		clickStart = millis();
 		lastDebounce = millis();
 		clickEnded = false;
-		return 0;
+		return 0; //keine eingabe
 	}
 	//Prüft, ob ein klicken + halten da ist.
 	if (state == HIGH && clickEnded == false && millis() - clickStart > 500 && longclicked == false){
 		longclicked = true;
-		return 2;
+		return 2; //klicken + halten
 
 	}
 	//fallende flanke
@@ -41,10 +41,10 @@ int CapButton::update(){
 			return 0;
 			}
 		if (clickStart - lastClick < 500){
-			return 3;
+			return 3; //doppel klick
 		}
 		else{
-			return 1;
+			return 1; // normaler klick
 		}
 	}
 
@@ -52,5 +52,5 @@ int CapButton::update(){
 		lastDebounce = millis();
 		oldstate=state;
 	}
-	return 0;
+	return 0; //keine eingabe
 }
