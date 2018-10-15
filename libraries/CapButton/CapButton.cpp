@@ -16,7 +16,7 @@ CapButton::CapButton(uint8_t pinRead, uint8_t pinSend){
 }
 
 int CapButton::update(){
-	int state Sensor.capacitiveSensor(30);
+	int state = Sensor.capacitiveSensor(30);
 
 	//steigende flanke
 	if (state == HIGH && millis() - lastDebounce > debouncetime && clickEnded == true) {
