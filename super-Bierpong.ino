@@ -33,9 +33,9 @@ CapButton ButtonUmstellenA = CapButton(PinButtonUmstellenA, PinButtonSend);
 CapButton ButtonUmstellenB = CapButton(PinButtonUmstellenB, PinButtonSend);
 CapButton ButtonColor = CapButton(PinButtonColor, PinButtonSend);
 
-int Modus = 0; //0 Bierpong normal | 1 Bierpong Rainbow |  2 Bierpong Kings Cup | 3 Flipcup
-int PunkteTeamA = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
-int PunkteTeamB = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
+uint8_t Modus = 0; //0 Bierpong normal | 1 Bierpong Rainbow |  2 Bierpong Kings Cup | 3 Flipcup
+uint8_t PunkteTeamA = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
+uint8_t PunkteTeamB = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
 
 //addressern der Pixel in den einzelnen Bierpong Leuchtfeldern von oben nach unten von links nach rechts
 byte FeldA[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{15,14,0,1},{13,14,2,3},{11,10,4,5},{9,8,6,7}};
@@ -73,7 +73,14 @@ void loop() {
 
 	if (stateModusButton == 1){
 		Modus ++;
-	}
+    StripTriA.clear();
+    StripTriB.clear();
+    StripSideL.clear();
+    StripSideR.clear();
+    PunkteTeamA = 0;
+    PunkteTeamB = 0;
+    }
+
 	if (Modus > 3){
 		Modus = 0;
 	}
@@ -161,19 +168,73 @@ void Bierpong(){
 }
 void Kingscup(){
   }
+
 void Rainbow(){
-  for(int i = 0; i < 10; i++){
-    for(int j = 0; j < 4; j++){
-      int offset = i*766/10;
-      StripTriA.setPixelColor(FeldA[i][j], RainbowRot(offset), RainbowGruen(offset), RainbowBlau(offset));
-      StripTriB.setPixelColor(FeldB[i][j], RainbowRot(offset), RainbowGruen(offset), RainbowBlau(offset));
-      Flipcup();
-    }
+  if (stateUmstellenButtonA == 1){
+    PunkteTeamB ++;
   }
+  if (PunkteTeamB > 3){
+    PunkteTeamB = 0;
   }
+  if (stateUmstellenButtonB == 1){
+    PunkteTeamA ++;
+  }
+  if (PunkteTeamA > 3){
+    PunkteTeamA = 0;
+  }
+	switch (PunkteTeamA){
+		case(0):
+			for (int i = 0; i<10; i++){
+        int offset = i*766/10;
+				for ( int j = 0; j < 4; j++){
+					StripTriA.setPixelColor(FeldA[i][j], RainbowRot(offset), RainbowGruen(offset), RainbowBlau(offset));
+			}
+		}
+		case(1):
+			for ( int i = 0; i < 10; i++ ){
+        int offset = i*766/10;
+				for ( int j = 0; j < 4; j++){
+					StripTriA.setPixelColor(FeldA[i][j], RainbowRot(offset)*Blume[i], RainbowGruen(offset)*Blume[i], RainbowBlau(offset)*Blume[i]);
+				}
+			}
+		case(2):
+			for ( int i = 0; i < 10; i++ ){
+        int offset = i*766/10;
+				for ( int j = 0; j < 4; j++){
+          StripTriA.setPixelColor(FeldA[i][j], RainbowRot(offset)*Diamant[i], RainbowGruen(offset)*Diamant[i], RainbowBlau(offset)*Diamant[i]);
+				}
+			}
+
+	}
+	switch (PunkteTeamB){
+		case(0):
+			for (int i = 0; i<10; i++){
+        int offset = i*766/10;
+				for ( int j = 0; j < 4; j++){
+					StripTriB.setPixelColor(FeldB[i][j],RainbowRot(offset) , RainbowGruen(offset), RainbowBlau(offset));
+			}
+		}
+		case(1):
+			for ( int i = 0; i < 10; i++ ){
+        int offset = i*766/10;
+				for ( int j = 0; j < 4; j++){
+					StripTriB.setPixelColor(FeldB[i][j], RainbowRot(offset)*Blume[i], RainbowGruen(offset)*Blume[i], RainbowBlau(offset)*Blume[i]);
+				}
+			}
+		case(2):
+			for ( int i = 0; i < 10; i++ ){
+        int offset = i*766/10;
+				for ( int j = 0; j < 4; j++){
+					StripTriB.setPixelColor(FeldB[i][j], RainbowRot(offset)*Diamant[i], RainbowGruen(offset)*Diamant[i], RainbowBlau(offset)*Diamant[i]);
+				}
+			}
+	}
+  Flipcup();
+}
+
 void Flipcup(){
-	for (int i = 0; i < 95; i++){
-		long unsigned int offset = i*766*millis()/(1000*95);
+	for (int i = 0; i < PixelStripSideL; i++){
+		long unsigned int offset = i*766/PixelStripSideL/2+millis()/1000;
 		StripSideL.setPixelColor(i, RainbowRot(offset) ,RainbowGruen(offset), RainbowBlau(offset));
 		StripSideR.setPixelColor(94-i, RainbowRot(offset), RainbowGruen(offset), RainbowBlau(offset));
 	}
@@ -181,34 +242,38 @@ void Flipcup(){
 
 byte RainbowRot(unsigned int offset){
   int c = offset%766;
-  byte rot = 0;
   if (c >= 0 && c <= 255){
-    rot = 255-c;
+    return 255 - c;
+  }
+  if (c > 255 && c <= 510) {
+    return 0;
   }
   if (c > 510 and c <= 765){
-    rot = c-510;
+    return c - 510;
   }
-  return rot;
 }
 byte RainbowGruen(unsigned int offset){
   int c = offset%766;
-  byte gruen = 0;
+  byte color;
   if (c >= 0 && c <= 255){
-    gruen=c;
+    return c;
   }
-  if (c > 255 && c < 510){
-    gruen = 510 - c;
+  if (c > 255 && c <= 510){
+    return 510 - c;
   }
-  return gruen;
+  if(c > 510){
+    return 0;
+  }
 }
 byte RainbowBlau(unsigned int offset){
   int c = offset%766;
-  byte blau = 0;
+  if(c >= 0 && c <= 255){
+    return 0;
+  }
   if (c>=256 && c<510){
-    blau = c-255;
+    return c - 255;
   }
 	if (c >= 510 && c< 765){
-    blau = 765-c;
+    return 765 - c;
   }
-  return blau;
 }
