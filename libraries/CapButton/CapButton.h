@@ -10,14 +10,13 @@ Libary for reading capacitive Buttons
 class CapButton
 {
   public:
-    CapButton(uint8_t pinread, uint8_t pinsend);
-	int update();
+    CapButton(CapacitiveSensor& Sensor);
+	   int update();
+     long readRaw ();
   private:
-	CapacitiveSensor& Sensor;
-	unsigned int _treshhold;
-  uint8_t _pinRead;
-	uint8_t _pinSend;
-  int oldstate;
+	CapacitiveSensor *_Sensor;
+	long _treshhold;
+  boolean oldstate;
   long lastDebounce;
 	long clickStart;
 	boolean clickEnded;

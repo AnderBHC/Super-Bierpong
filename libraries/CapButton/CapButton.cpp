@@ -2,9 +2,8 @@
 #include "CapButton.h"
 #include "CapacitiveSensor.h"
 
-CapButton::CapButton(uint8_t pinRead, uint8_t pinSend){
-	_pinRead = pinRead;
-	_pinSend = pinSend;
+CapButton::CapButton(CapacitiveSensor& Sensor){
+
 	lastDebounce = 0;
 	oldstate = LOW;
 	clickStart = 0;
@@ -12,11 +11,27 @@ CapButton::CapButton(uint8_t pinRead, uint8_t pinSend){
 	longclicked = false;
 	lastClick = 0;
 	debouncetime = 100;
-	CapacitiveSensor Sensor= CapacitiveSensor (_pinSend, _pinRead);
+	_Sensor = &Sensor;
+	_treshhold = 150;
 }
 
+long CapButton::readRaw(){
+
+	long total = _Sensor->capacitiveSensor(100);
+	return total;
+}
 int CapButton::update(){
-	int state = Sensor.capacitiveSensor(30);
+	long total = _Sensor->capacitiveSensor(100);
+	state = LOW;
+	if (total > _treshhold){
+		state = HIGH;
+	}
+	/*
+	Serial.print(total);
+	Serial.print("\t");
+	Serial.print(state);
+	Serial.print("\n");
+	*/
 
 	//steigende flanke
 	if (state == HIGH && millis() - lastDebounce > debouncetime && clickEnded == true) {
