@@ -35,7 +35,6 @@ CapacitiveSensor SensorUmstellenB = CapacitiveSensor(PinSend, PinButtonUmstellen
 CapButton ButtonModus = CapButton(SensorModus);
 CapButton ButtonUmstellenA = CapButton(SensorUmstellenA);
 CapButton ButtonUmstellenB = CapButton(SensorUmstellenB);
-//CapButton ButtonColor = CapButton();
 
 uint8_t Modus = 0; //0 Bierpong normal | 1 Bierpong Rainbow |  2 Bierpong Kings Cup | 3 Flipcup
 uint8_t oldModus = 0;
@@ -57,7 +56,6 @@ byte SetRandomFieldB[11]={0,0,0,0,0,0,0,0,0,0};
 uint8_t stateModusButton;
 uint8_t stateUmstellenButtonA;
 uint8_t stateUmstellenButtonB;
-uint8_t stateColorButton;
 
 int RandomFieldA = 0;
 int RandomFieldB = 0;
@@ -81,7 +79,6 @@ void loop() {
   stateModusButton = ButtonModus.update();
   stateUmstellenButtonA = ButtonUmstellenA.update();
   stateUmstellenButtonB = ButtonUmstellenB.update();
-  stateColorButton = ButtonColor.update();
 
   if (stateModusButton == 1){
     Modus ++;
@@ -183,6 +180,9 @@ void Bierpong(){
 }
 
 void Kingscup(){
+  int breakA;
+  int breakB;
+
   if (oldModus !=Modus){ //neues Spiel beginnt
     oldModus = Modus;
     stateUmstellenButtonA = 1;
@@ -197,7 +197,7 @@ void Kingscup(){
 
   if (stateUmstellenButtonA == 1){
     RandomFieldA = rand() %(9-0)+0; //Generates number between 0 - 9
-    int breakA = 0;
+    breakA = 0;
     while (TrackerRandomFieldA[RandomFieldA] == 1 && breakA < 10){
       RandomFieldA++;
       breakA++;
@@ -219,7 +219,7 @@ void Kingscup(){
 }
   if (stateUmstellenButtonB == 1){
     RandomFieldB = rand() %(9-0)+0; //Generates number between 0 - 9
-    int breakB = 0;
+    breakB = 0;
     while (TrackerRandomFieldB[RandomFieldB] == 1 && breakB < 10){
       RandomFieldB++;
       breakB++;
