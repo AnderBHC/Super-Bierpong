@@ -11,13 +11,27 @@ CapButton::CapButton(uint8_t pinRead, uint8_t pinSend){
 	clickEnded = true;
 	longclicked = false;
 	lastClick = 0;
-	debouncetime = 100;
 	CapacitiveSensor Sensor= CapacitiveSensor (_pinSend, _pinRead);
+	debouncetime = 50;
+	
 }
 
+long  CapButton::rawSensor(){
+	long total = _Sensor.capacitiveSensor(100);
+	return total;
+}
 int CapButton::update(){
-	int state = Sensor.capacitiveSensor(30);
-
+	long total=_Sensor.capacitiveSensor(100);
+	
+	int state = LOW;
+	if (total>50){
+		state=HIGH;
+	}
+/* 	Serial.print(total);
+	Serial.print("\t");
+	Serial.print(state);
+	Serial.print("\n");
+ */
 	//steigende flanke
 	if (state == HIGH && millis() - lastDebounce > debouncetime && clickEnded == true) {
 		clickStart = millis();
@@ -26,7 +40,7 @@ int CapButton::update(){
 		return 0; //keine eingabe
 	}
 	//Prüft, ob ein klicken + halten da ist.
-	if (state == HIGH && clickEnded == false && millis() - clickStart > 500 && longclicked == false){
+	if (state == HIGH && clickEnded == false && millis() - clickStart > 2000 && longclicked == false){
 		longclicked = true;
 		return 2; //klicken + halten
 
@@ -35,15 +49,17 @@ int CapButton::update(){
 	if (state == LOW && clickEnded == false && millis() - lastDebounce > debouncetime){
 		clickEnded = true;
 		lastDebounce = millis();
-		lastClick = millis();
+		
 		if (longclicked == true){
 			longclicked = false;
 			return 0;
 			}
-		if (clickStart - lastClick < 500){
+		if (clickStart - lastClick < 100){
+			lastClick = millis();
 			return 3; //doppel klick
 		}
 		else{
+			lastClick = millis();
 			return 1; // normaler klick
 		}
 	}
