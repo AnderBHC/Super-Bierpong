@@ -12,7 +12,7 @@ CapButton::CapButton(CapacitiveSensor& Sensor){
 	lastClick = 0;
 	debouncetime = 50;
 	_Sensor = &Sensor;
-	_treshhold = 150;
+	treshhold = _Sensor -> capacitiveSensor(100)*1.1;
 }
 
 long CapButton::readRaw(){
@@ -22,16 +22,10 @@ long CapButton::readRaw(){
 }
 int CapButton::update(){
 	long total = _Sensor->capacitiveSensor(100);
-	state = LOW;
-	if (total > _treshhold){
+	boolean state = LOW;
+	if (total > treshhold){
 		state = HIGH;
 	}
-	/*
-	Serial.print(total);
-	Serial.print("\t");
-	Serial.print(state);
-	Serial.print("\n");
-	*/
 
 	//steigende flanke
 	if (state == HIGH && millis() - lastDebounce > debouncetime && clickEnded == true) {

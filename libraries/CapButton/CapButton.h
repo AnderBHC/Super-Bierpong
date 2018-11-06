@@ -15,13 +15,12 @@ class CapButton
      long readRaw ();
   private:
 	CapacitiveSensor *_Sensor;
-	long _treshhold;
+	long treshhold;
   boolean oldstate;
   long lastDebounce;
 	long clickStart;
 	boolean clickEnded;
 	boolean longclicked;
-	boolean state;
 	long lastClick;
 	int debouncetime;
 };
