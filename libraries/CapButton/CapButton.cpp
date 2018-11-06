@@ -10,7 +10,7 @@ CapButton::CapButton(CapacitiveSensor& Sensor){
 	clickEnded = true;
 	longclicked = false;
 	lastClick = 0;
-	debouncetime = 100;
+	debouncetime = 50;
 	_Sensor = &Sensor;
 	_treshhold = 150;
 }
@@ -36,12 +36,12 @@ int CapButton::update(){
 	//steigende flanke
 	if (state == HIGH && millis() - lastDebounce > debouncetime && clickEnded == true) {
 		clickStart = millis();
-		lastDebounce = millis();
+		//lastDebounce = millis();
 		clickEnded = false;
 		return 0; //keine eingabe
 	}
 	//Prüft, ob ein klicken + halten da ist.
-	if (state == HIGH && clickEnded == false && millis() - clickStart > 500 && longclicked == false){
+	if (state == HIGH && clickEnded == false && millis() - clickStart > 2000 && longclicked == false){
 		longclicked = true;
 		return 2; //klicken + halten
 
@@ -49,16 +49,17 @@ int CapButton::update(){
 	//fallende flanke
 	if (state == LOW && clickEnded == false && millis() - lastDebounce > debouncetime){
 		clickEnded = true;
-		lastDebounce = millis();
-		lastClick = millis();
+		//lastDebounce = millis();
 		if (longclicked == true){
 			longclicked = false;
 			return 0;
 			}
 		if (clickStart - lastClick < 500){
+			lastClick = millis();
 			return 3; //doppel klick
 		}
 		else{
+			lastClick = millis();
 			return 1; // normaler klick
 		}
 	}

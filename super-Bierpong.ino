@@ -38,6 +38,7 @@ CapButton ButtonUmstellenB = CapButton(SensorUmstellenB);
 //CapButton ButtonColor = CapButton();
 
 uint8_t Modus = 0; //0 Bierpong normal | 1 Bierpong Rainbow |  2 Bierpong Kings Cup | 3 Flipcup
+uint8_t oldModus = 0;
 uint8_t PunkteTeamA = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
 uint8_t PunkteTeamB = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
 
@@ -101,19 +102,17 @@ void loop() {
       Bierpong();
       break;
 
-    case(2):
-      Kingscup();
-      break;
-
     case(1):
       Rainbow();
       break;
 
+    case(2):
+      Kingscup();
+      break;
     case(3):
       Flipcup();
       break;
-
-  }
+}
 
   StripTriA.show();
   StripTriB.show();
@@ -123,6 +122,11 @@ void loop() {
 }
 
 void Bierpong(){
+  if (Modus != oldModus){
+    oldModus = Modus;
+    PunkteTeamA = 0;
+    PunkteTeamB = 0;
+  }
   if (stateUmstellenButtonA == 1){
     PunkteTeamB ++;
   }
@@ -179,11 +183,24 @@ void Bierpong(){
 }
 
 void Kingscup(){
+  if (oldModus !=Modus){ //neues Spiel beginnt
+    oldModus = Modus;
+    stateUmstellenButtonA = 1;
+    stateUmstellenButtonB = 1;
+    PunkteTeamA = 0;
+    PunkteTeamB = 0;
+    for (int i = 0; i < 10; i++){
+      TrackerRandomFieldA[i] = 0;
+      TrackerRandomFieldB[i] = 0;
+    }
+  }
+
   if (stateUmstellenButtonA == 1){
-    PunkteTeamA ++;
     RandomFieldA = rand() %(9-0)+0; //Generates number between 0 - 9
-    while (TrackerRandomFieldA[RandomFieldA] == 1){
+    int breakA = 0;
+    while (TrackerRandomFieldA[RandomFieldA] == 1 && breakA < 10){
       RandomFieldA++;
+      breakA++;
       if (RandomFieldA >= 10){
         RandomFieldA = 0;
       }
@@ -194,16 +211,18 @@ void Kingscup(){
     }
     SetRandomFieldA[RandomFieldA] = 1;
   }
-  if (PunkteTeamA >= 10){
+ if (PunkteTeamA > 0){
     PunkteTeamA = 0;
     for (int i = 0; i<10; i++) {
       TrackerRandomFieldA[i] = 0;
   }
+}
   if (stateUmstellenButtonB == 1){
-    PunkteTeamB ++;
     RandomFieldB = rand() %(9-0)+0; //Generates number between 0 - 9
-    while (TrackerRandomFieldB[RandomFieldB] == 1){
+    int breakB = 0;
+    while (TrackerRandomFieldB[RandomFieldB] == 1 && breakB < 10){
       RandomFieldB++;
+      breakB++;
       if (RandomFieldB >= 10){
         RandomFieldB = 0;
       }
@@ -214,41 +233,54 @@ void Kingscup(){
     }
     SetRandomFieldB[RandomFieldB] = 1;
   }
-  if (PunkteTeamB > 10){
+  if (PunkteTeamB > 0){
     PunkteTeamB = 0;
+    for int i = 0; i < 10; i++){
+      TrackerRandomFieldB[i] = 0;
+    }
   }
-  switch (PunkteTeamA){
+  switch (breakA){
     case(10):
+      PunkteTeamA = 1;
       for (int i = 0; i<10; i++){
         for ( int j = 0; j < 4; j++){
           StripTriA.setPixelColor(FeldA[i][j], 0, 255, 0);
       }
     }
+    break;
     default:
       for ( int i = 0; i < 10; i++ ){
         for ( int j = 0; j < 4; j++){
           StripTriA.setPixelColor(FeldA[i][j], 255*SetRandomFieldA[i], 255*SetRandomFieldA[i], 255*SetRandomFieldA[i]);
         }
       }
+      break;
   }
-  switch (PunkteTeamB){
+  switch (breakB){
     case(10):
+    PunkteTeamB = 1;
       for (int i = 0; i<10; i++){
         for ( int j = 0; j < 4; j++){
           StripTriB.setPixelColor(FeldB[i][j], 0, 255, 0);
       }
     }
-    default: {
+    break;
+    default:
       for ( int i = 0; i < 10; i++ ){
         for ( int j = 0; j < 4; j++){
           StripTriB.setPixelColor(FeldB[i][j], 255*SetRandomFieldB[i], 255*SetRandomFieldB[i], 255*SetRandomFieldA[i]);
         }
       }
-    }
+    break;
   }
 }
 
 void Rainbow(){
+  if (Modus != oldModus){
+    oldModus = Modus;
+    PunkteTeamA = 0;
+    PunkteTeamB = 0;
+  }
   if (stateUmstellenButtonA == 1){
     PunkteTeamB ++;
   }
@@ -312,6 +344,9 @@ void Rainbow(){
 }
 
 void Flipcup(){
+  if (Modus != oldModus){
+    oldModus = Modus;
+  }
   for (int i = 0; i < PixelStripSideL; i++){
     long unsigned int offset = i*766/PixelStripSideL/2+millis()/1000;
     StripSideL.setPixelColor(i, RainbowRot(offset) ,RainbowGruen(offset), RainbowBlau(offset));
