@@ -3,7 +3,7 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
-
+#invlude <lib_dmx.h>
 
 //Pinbelegung
 const int PinStripTriA = 2;
@@ -17,6 +17,7 @@ const int PinButtonColor = 8;
 const int PinButtonUmstellenA = 9;
 const int PinButtonUmstellenB = 10;
 
+const uint16_t DMXStart = 1;
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
 const int PixelStripSideR = 95;
 const int PixelStripSideL= 95;
@@ -70,12 +71,19 @@ void setup() {
   StripTriB.show();
   StripSideL.show();
   StripSideR.show();
+
+  ArduinoDmx0.set_control_pin(-1);
+  ArduinoDmx0.set_rx_address(DMXStart);
+  ArduinoDmx0.set_rx_channels(48);
+  ArduinoDmx0.init_rx(DMX512);
 }
 
 void loop() {
-
+  boolean DMXOn = digitalRead(PinDMXMode);
+  switch (DMXOn):
+    case(0):
 //verarbeitung der eingabe der Kapizitativen Taster
-//0 keine eingabe | 1 normaler klick | 2 klicken + halten | 3 doppel klick
+//0 keine eingabe | 1 normaler klick
   stateModusButton = ButtonModus.update();
   stateUmstellenButtonA = ButtonUmstellenA.update();
   stateUmstellenButtonB = ButtonUmstellenB.update();
@@ -108,6 +116,10 @@ void loop() {
       break;
     case(3):
       Flipcup();
+      break;
+    break;
+    case(1):
+      DMX();
       break;
 }
 
@@ -389,5 +401,18 @@ byte RainbowBlau(unsigned int offset){
   }
   if (c >= 510 && c< 765){
     return 765 - c;
+  }
+}
+
+void DMX(){
+  for (int i = 0; i < 10; i++){
+    for (int j = 0; j < 4; j++){
+      StripTriA.setPixelColor(FeldA[i][j], ArduinoDmx0.RxBuffer[i * 3], ArduinoDmx0.RxBuffer[i * 3 + 1], ArduinoDmx0.RxBuffer[i * 3 + 2]);
+      StripTriB.setPixelColor(FeldB[i][j], ArduinoDmx0.RxBuffer[i * 3 + 30], ArduinoDmx0.RxBuffer[i * 3 + 31], ArduinoDmx0.RxBuffer[i * 3 + 32]);
+    }
+  }
+  for (int i = 0; i < PixelStripSideL; i++){
+    StripSideL.setPixelColor(i, ArduinoDmx0.RxBuffer[60], ArduinoDmx0.RxBuffer[61], ArduinoDmx0.RxBuffer[62]);
+    StripSideR.setPixelColor(i, ArduinoDmx0.RxBuffer[64], ArduinoDmx0.RxBuffer[65], ArduinoDmx0.RxBuffer[66]);
   }
 }

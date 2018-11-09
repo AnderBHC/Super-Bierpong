@@ -3,4 +3,5 @@
 
 libraries/*
 !libraries/CapButton
+!libaries/DMX
 *.hex
