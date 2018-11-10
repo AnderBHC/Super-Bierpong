@@ -36,7 +36,7 @@ int CapButton::update(){
 		return 0; //keine eingabe
 	}
 	//Prüft, ob ein klicken + halten da ist.
-	if (state == HIGH && clickEnded == false && millis() - clickStart > 500 && longclicked == false){
+	if (state == HIGH && clickEnded == false && millis() - clickStart > clickTime && longclicked == false){
 		longclicked = true;
 		return 1; //klicken + halten
 
