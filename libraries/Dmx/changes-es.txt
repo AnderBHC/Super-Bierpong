@@ -1,0 +1,41 @@
+Libreria deskontrol 4 universos DMX para Arduino.
+
+Version 0.3 NOVEDADES
+
+- Ya no es necesario desactivar y activar interrupciones durante la configuracion. 
+
+- Ya no es necesario modificar el archivo HarwareSerial.cpp del IDE Arduino.
+
+- Soporte experimental para modos DMX no estandar, mas rapidos y con mas canales por universo:
+
+	DMX512     (250 kbaud  - 2 to 512  channels) Standard USITT DMX-512
+	DMX1024    (500 kbaud  - 2 to 1024 channels) Completely non standard - TESTED ok
+	DMX2048    (1000 kbaud - 2 to 2048 channels) called by manufacturers DMX1000K, DMX 4x or DMX 1M ???
+
+- Eliminados leds indicadores tx - rx, si son necesarios se deberan implementar en el programa.
+
+- Interrupcion de trama transmitida y recibida por cada universo, callback de usuario.
+
+
+Problemas conocidos:
+
+Al compilar nos aparece el error: ‘ArduinoDmxN’ was not declared in this scope:
+
+Comprobar si esta configurado correctamente el tipo de placa en el IDE Arduino,  menu tools > board 
+(con Arduino nano solo se puede utilizar una USART = ArduinoDmx0 = USART0)
+
+
+Parpadeo al controlar leds:
+
+Si estamos manejando focos de leds puede que aparezca parpadeo debido a una frecuencia de refresco demasiado baja, deberemos utilizar menos canales por universo (por ejemplo 200 en vez de 512, para que aumente la frecuencia) y/o utilizar menos universos.
+
+
+Nota sobre la frecuencia de refresco:
+
+El Arduino Nano y el Arduino mega utilizan un microcontrolador Atmel AVR de 8 bits a 16 Mhz, que nos impone una limitacion de recursos.
+Por ejemplo 4 buffers en modo DMX1000K a 2048 canales cada uno consumiran TODA la memoria en un Arduino Mega 2560, por tanto es necesario tener claro lo que estamos haciendo.
+Debemos tener tambien en cuenta que en la practica seguramente no podremos utilizar todos los universos con todos los canales si queremos mantener alta la frecuencia de refresco de las entradas y salidas dmx. 
+
+Cualquier sugerencia o mejora es bienvenida.
+
+7-Jul-2012  - Toni Merino  - www.deskontrol.net
