@@ -3,7 +3,7 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
-#invlude <lib_dmx.h>
+#include <lib_dmx.h>
 
 //Pinbelegung
 const int PinStripTriA = 5;
@@ -18,6 +18,7 @@ const int PinButtonUmstellenB = 8;
 
 const uint16_t DMXStart = 1; //Start Adresse für die verwendung im DMX betrieb
 const uint8_t DMXControlPin = 9;
+const uint8_t PinDMXMode = 10;
 
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
 const int PixelStripSideR = 94;
@@ -77,52 +78,54 @@ void setup() {
   ArduinoDmx0.set_rx_address(DMXStart);
   ArduinoDmx0.set_rx_channels(66);
   ArduinoDmx0.init_rx(DMX512);
+  pinMode(PinDMXMode,INPUT);
 }
 
 void loop() {
   boolean DMXOn = digitalRead(PinDMXMode);
-  switch (DMXOn):
+  switch (DMXOn){
     case(0):
 //verarbeitung der eingabe der Kapizitativen Taster
 //0 keine eingabe | 1 normaler klick
-  stateModusButton = ButtonModus.update();
-  stateUmstellenButtonA = ButtonUmstellenA.update();
-  stateUmstellenButtonB = ButtonUmstellenB.update();
+    stateModusButton = ButtonModus.update();
+    stateUmstellenButtonA = ButtonUmstellenA.update();
+    stateUmstellenButtonB = ButtonUmstellenB.update();
 
-  if (stateModusButton == 1){
-    Modus ++;
-    StripTriA.clear();
-    StripTriB.clear();
-    StripSideL.clear();
-    StripSideR.clear();
-    PunkteTeamA = 0;
-    PunkteTeamB = 0;
+    if (stateModusButton == 1){
+      Modus ++;
+      StripTriA.clear();
+      StripTriB.clear();
+      StripSideL.clear();
+      StripSideR.clear();
+      PunkteTeamA = 0;
+      PunkteTeamB = 0;
+      }
+
+    if (Modus > 3){
+      Modus = 0;
     }
 
-  if (Modus > 3){
-    Modus = 0;
-  }
+    switch (Modus){
+      case(0):
+        Bierpong();
+        break;
 
-  switch (Modus){
-    case(0):
-      Bierpong();
-      break;
+      case(1):
+        Rainbow();
+        break;
 
-    case(1):
-      Rainbow();
+      case(2):
+        Kingscup();
+        break;
+      case(3):
+        Flipcup();
+        break;
       break;
-
-    case(2):
-      Kingscup();
-      break;
-    case(3):
-      Flipcup();
-      break;
-    break;
+    }
     case(1):
       DMX();
       break;
-}
+  }
 
   StripTriA.show();
   StripTriB.show();

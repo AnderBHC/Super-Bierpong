@@ -12,6 +12,7 @@ CapButton::CapButton(CapacitiveSensor& Sensor){
 	lastClick = 0;
 	debouncetime = 50;
 	treshhold = 1000;
+	clickTime = 500;
 
 }
 
@@ -26,8 +27,7 @@ int CapButton::update(){
 	if (total > treshhold){
 		state = HIGH;
 	}
-	Serial.print(total);
-	Serial.print("\t");
+
 
 	//steigende flanke
 	if (state == HIGH && millis() - lastDebounce > debouncetime && clickEnded == true) {
@@ -48,13 +48,9 @@ int CapButton::update(){
 			longclicked = false;
 			return 0;
 			}
-		if (clickStart - lastClick < 500){
-			lastClick = millis();
-			return 3; //doppel klick
-		}
 		else{
 			lastClick = millis();
-			return 0; // normaler klick
+			return 0;
 		}
 	}
 

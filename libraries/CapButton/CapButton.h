@@ -23,5 +23,6 @@ class CapButton
 	boolean longclicked;
 	long lastClick;
 	int debouncetime;
+  int clickTime;
 };
 #endif
