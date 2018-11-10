@@ -79,6 +79,7 @@ void setup() {
   ArduinoDmx0.set_rx_channels(66);
   ArduinoDmx0.init_rx(DMX512);
   pinMode(PinDMXMode,INPUT);
+  digitalWrite(PinDMXMode,LOW);
 }
 
 void loop() {
