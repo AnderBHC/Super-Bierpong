@@ -195,7 +195,7 @@ void Kingscup(){
       TrackerRandomFieldB[i] = 0;
     }
   }
-    int breakA;
+  int breakA;
 	int breakB;
   if (stateUmstellenButtonA == 1){
 	  breakA = 0;
