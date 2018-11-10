@@ -16,7 +16,9 @@ const int PinButtonModus = 6;
 const int PinButtonUmstellenA = 7;
 const int PinButtonUmstellenB = 8;
 
-const uint16_t DMXStart = 1;
+const uint16_t DMXStart = 1; //Start Adresse für die verwendung im DMX betrieb
+const uint8_t DMXControlPin = 9;
+
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
 const int PixelStripSideR = 94;
 const int PixelStripSideL= 94;
@@ -38,16 +40,16 @@ CapButton ButtonUmstellenB = CapButton(SensorUmstellenB);
 
 uint8_t Modus = 0; //0 Bierpong normal | 1 Bierpong Rainbow |  2 Bierpong Kings Cup | 3 Flipcup
 uint8_t oldModus = 0;
-uint8_t PunkteTeamA = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
-uint8_t PunkteTeamB = 0; //0 alle | 1 Blume | 2 diamant | 3 aus
+uint8_t PunkteTeamA = 0; //0 alle | 1 Blume | 2 diamant
+uint8_t PunkteTeamB = 0; //0 alle | 1 Blume | 2 diamant
 
 //addressern der Pixel in den einzelnen Bierpong Leuchtfeldern von oben nach unten von links nach rechts
-byte FeldA[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{6,7,14,15},{4,5,12,13},{2,3,10,11},{0,1,8,9}};
-byte FeldB[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{0,1,14,15},{2,3,12,13},{4,5,10,11},{6,7,8,9}};
+const byte FeldA[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{6,7,14,15},{4,5,12,13},{2,3,10,11},{0,1,8,9}};
+const byte FeldB[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{0,1,14,15},{2,3,12,13},{4,5,10,11},{6,7,8,9}};
 
 //faktoren für einzelne Bierpong felder nach dem umstellen
-byte Blume[11]={0,1,1,1,1,1,0,1,1,0};
-byte Diamant[11]={1,1,1,0,1,0,0,0,0,0};
+const byte Blume[11]={0,1,1,1,1,1,0,1,1,0};
+const byte Diamant[11]={1,1,1,0,1,0,0,0,0,0};
 byte TrackerRandomFieldA[11]={0,0,0,0,0,0,0,0,0,0};
 byte TrackerRandomFieldB[11]={0,0,0,0,0,0,0,0,0,0};
 byte SetRandomFieldA[11]={0,0,0,0,0,0,0,0,0,0};
@@ -56,7 +58,6 @@ byte SetRandomFieldB[11]={0,0,0,0,0,0,0,0,0,0};
 uint8_t stateModusButton;
 uint8_t stateUmstellenButtonA;
 uint8_t stateUmstellenButtonB;
-uint8_t stateColorButton;
 
 int RandomFieldA = 0;
 int RandomFieldB = 0;
@@ -72,9 +73,9 @@ void setup() {
   StripSideL.show();
   StripSideR.show();
 
-  ArduinoDmx0.set_control_pin(-1);
+  ArduinoDmx0.set_control_pin(DMXControlPin);
   ArduinoDmx0.set_rx_address(DMXStart);
-  ArduinoDmx0.set_rx_channels(48);
+  ArduinoDmx0.set_rx_channels(66);
   ArduinoDmx0.init_rx(DMX512);
 }
 
@@ -420,6 +421,6 @@ void DMX(){
   }
   for (int i = 0; i < PixelStripSideL; i++){
     StripSideL.setPixelColor(i, ArduinoDmx0.RxBuffer[60], ArduinoDmx0.RxBuffer[61], ArduinoDmx0.RxBuffer[62]);
-    StripSideR.setPixelColor(i, ArduinoDmx0.RxBuffer[64], ArduinoDmx0.RxBuffer[65], ArduinoDmx0.RxBuffer[66]);
+    StripSideR.setPixelColor(i, ArduinoDmx0.RxBuffer[63], ArduinoDmx0.RxBuffer[64], ArduinoDmx0.RxBuffer[65]);
   }
 }
