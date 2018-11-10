@@ -3,7 +3,7 @@
 #include "CapacitiveSensor.h"
 
 CapButton::CapButton(CapacitiveSensor& Sensor){
-
+	_Sensor = &Sensor;
 	lastDebounce = 0;
 	oldstate = LOW;
 	clickStart = 0;
@@ -11,8 +11,8 @@ CapButton::CapButton(CapacitiveSensor& Sensor){
 	longclicked = false;
 	lastClick = 0;
 	debouncetime = 50;
-	_Sensor = &Sensor;
-	treshhold = _Sensor -> capacitiveSensor(100)*1.1;
+	treshhold = 1000;
+
 }
 
 long CapButton::readRaw(){
@@ -26,24 +26,24 @@ int CapButton::update(){
 	if (total > treshhold){
 		state = HIGH;
 	}
+	Serial.print(total);
+	Serial.print("\t");
 
 	//steigende flanke
 	if (state == HIGH && millis() - lastDebounce > debouncetime && clickEnded == true) {
 		clickStart = millis();
-		//lastDebounce = millis();
 		clickEnded = false;
 		return 0; //keine eingabe
 	}
 	//Prüft, ob ein klicken + halten da ist.
-	if (state == HIGH && clickEnded == false && millis() - clickStart > 2000 && longclicked == false){
+	if (state == HIGH && clickEnded == false && millis() - clickStart > 500 && longclicked == false){
 		longclicked = true;
-		return 2; //klicken + halten
+		return 1; //klicken + halten
 
 	}
 	//fallende flanke
 	if (state == LOW && clickEnded == false && millis() - lastDebounce > debouncetime){
 		clickEnded = true;
-		//lastDebounce = millis();
 		if (longclicked == true){
 			longclicked = false;
 			return 0;
@@ -54,7 +54,7 @@ int CapButton::update(){
 		}
 		else{
 			lastClick = millis();
-			return 1; // normaler klick
+			return 0; // normaler klick
 		}
 	}
 
