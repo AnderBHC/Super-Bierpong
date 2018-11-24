@@ -17,8 +17,8 @@ const int PinButtonUmstellenA = 7;
 const int PinButtonUmstellenB = 8;
 
 const uint16_t DMXStart = 1; //Start Adresse für die verwendung im DMX betrieb
-const uint8_t DMXControlPin = 9;
-const uint8_t PinDMXMode = 10;
+const uint8_t DMXControlPin = A0; //umschalt am Transreciver
+const uint8_t PinDMXMode = A5; //Schalter zu einschalten des DMX
 
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
 const int PixelStripSideR = 94;
@@ -121,8 +121,9 @@ void loop() {
       case(3):
         Flipcup();
         break;
+      }
       break;
-    }
+
     case(1):
       DMX();
       break;
