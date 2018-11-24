@@ -18,11 +18,7 @@ class CapButton
 	long treshhold;
   boolean oldstate;
   long lastDebounce;
-	long clickStart;
 	boolean clickEnded;
-	boolean longclicked;
-	long lastClick;
 	int debouncetime;
-  int clickTime;
 };
 #endif
