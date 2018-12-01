@@ -157,21 +157,21 @@ void Bierpong(){
     case(0):
       for (int i = 0; i<10; i++){
         for ( int j = 0; j < 4; j++){
-          StripTriA.setPixelColor(FeldA[i][j], 255, 200, 0);
+          StripTriA.setPixelColor(FeldA[i][j], 0, 255, 28);
       }
     }
 	break;
     case(1):
       for ( int i = 0; i < 10; i++ ){
         for ( int j = 0; j < 4; j++){
-          StripTriA.setPixelColor(FeldA[i][j], 0, 255*Blume[i], 255*Blume[i]);
+          StripTriA.setPixelColor(FeldA[i][j], 255*Blume[i], 117*Blume[i], 0);
         }
       }
 	break;
     case(2):
       for ( int i = 0; i < 10; i++ ){
         for ( int j = 0; j < 4; j++){
-          StripTriA.setPixelColor(FeldA[i][j], 255*Diamant[i], 0, 255*Diamant[i]);
+          StripTriA.setPixelColor(FeldA[i][j], 255*Diamant[i], 0, 22*Diamant[i]);
         }
       }
 		break;
@@ -180,21 +180,21 @@ void Bierpong(){
     case(0):
       for (int i = 0; i<10; i++){
         for ( int j = 0; j < 4; j++){
-          StripTriB.setPixelColor(FeldB[i][j], 0, 255, 0);
+          StripTriB.setPixelColor(FeldB[i][j], 0, 255, 28);
       }
     }
 	break;
     case(1):
       for ( int i = 0; i < 10; i++ ){
         for ( int j = 0; j < 4; j++){
-          StripTriB.setPixelColor(FeldB[i][j], 127*Blume[i], 127*Blume[i], 0);
+          StripTriB.setPixelColor(FeldB[i][j], 255*Blume[i], 117*Blume[i], 0);
         }
       }
 	break;
     case(2):
       for ( int i = 0; i < 10; i++ ){
         for ( int j = 0; j < 4; j++){
-          StripTriB.setPixelColor(FeldB[i][j], 255*Diamant[i], 0*Diamant[i], 0);
+          StripTriB.setPixelColor(FeldB[i][j], 255*Diamant[i], 0*Diamant[i], 22);
         }
       }
 	break;
