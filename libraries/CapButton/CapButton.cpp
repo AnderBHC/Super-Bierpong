@@ -11,10 +11,6 @@ CapButton::CapButton(CapacitiveSensor& Sensor){
 	treshhold = 1000;
 }
 
-long CapButton::readRaw(){
-	long total = _Sensor->capacitiveSensor(100);
-	return total;
-}
 int CapButton::update(){
 	long total = _Sensor->capacitiveSensor(100);
 	boolean state = LOW;
@@ -30,7 +26,7 @@ int CapButton::update(){
 	//fallende flanke
 	if (state == LOW && clickEnded == false && millis() - lastDebounce > debouncetime){
 		clickEnded = true;
-			return 0;
+			return 0; //keine eingabe
 		}
 	if (state!=oldstate){
 		lastDebounce = millis();
