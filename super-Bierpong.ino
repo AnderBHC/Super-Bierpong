@@ -194,7 +194,7 @@ void Bierpong(){
     case(2):
       for ( int i = 0; i < 10; i++ ){
         for ( int j = 0; j < 4; j++){
-          StripTriB.setPixelColor(FeldB[i][j], 255*Diamant[i], 0*Diamant[i], 22);
+          StripTriB.setPixelColor(FeldB[i][j], 255*Diamant[i], 0*Diamant[i], 22*Diamant[i]);
         }
       }
 	break;
