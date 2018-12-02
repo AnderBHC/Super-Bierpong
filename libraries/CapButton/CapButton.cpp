@@ -7,7 +7,7 @@ CapButton::CapButton(CapacitiveSensor& Sensor){
 	lastDebounce = 0;
 	oldstate = LOW;
 	clickEnded = true;
-	debouncetime = 50;
+	debouncetime = 100;
 	treshhold = 1000;
 }
 
