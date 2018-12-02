@@ -77,6 +77,7 @@ void setup() {
   ArduinoDmx0.set_control_pin(DMXControlPin);
   ArduinoDmx0.set_rx_address(DMXStart);
   ArduinoDmx0.set_rx_channels(66);
+  ArduinoDmx0.attachRXInterrupt  (frame_received);
   ArduinoDmx0.init_rx(DMX512);
   pinMode(PinDMXMode,INPUT);
   digitalWrite(PinDMXMode,LOW);
@@ -125,7 +126,7 @@ void loop() {
       break;
 
     case(1):
-      DMX();
+//      DMX();
       break;
   }
 
@@ -418,14 +419,23 @@ byte RainbowBlau(unsigned int offset){
 }
 
 void DMX(){
-  for (int i = 0; i < 10; i++){
-    for (int j = 0; j < 4; j++){
-      StripTriA.setPixelColor(FeldA[i][j], ArduinoDmx0.RxBuffer[i * 3], ArduinoDmx0.RxBuffer[i * 3 + 1], ArduinoDmx0.RxBuffer[i * 3 + 2]);
-      StripTriB.setPixelColor(FeldB[i][j], ArduinoDmx0.RxBuffer[i * 3 + 30], ArduinoDmx0.RxBuffer[i * 3 + 31], ArduinoDmx0.RxBuffer[i * 3 + 32]);
+
+}
+void frame_received(uint8_t universe){ // Custom ISR: fired when all channels in one universe are received
+  if (digitalRead(PinDMXMode)==HIGH)
+  {
+/*
+    for (int i = 0; i < 10; i++){
+      for (int j = 0; j < 4; j++){
+        int k = i*3;
+        StripTriA.setPixelColor(FeldA[i][j], ArduinoDmx0.RxBuffer[k], ArduinoDmx0.RxBuffer[k + 1], ArduinoDmx0.RxBuffer[k + 2]);
+        StripTriB.setPixelColor(FeldB[i][j], ArduinoDmx0.RxBuffer[k + 30], ArduinoDmx0.RxBuffer[k + 31], ArduinoDmx0.RxBuffer[k + 32]);
+      }
+    }
+*/
+  for (int i = 0; i < PixelStripSideL; i++){
+      StripSideL.setPixelColor(i, ArduinoDmx0.RxBuffer[0], ArduinoDmx0.RxBuffer[1], ArduinoDmx0.RxBuffer[2]);
+      StripSideR.setPixelColor(i, ArduinoDmx0.RxBuffer[3], ArduinoDmx0.RxBuffer[4], ArduinoDmx0.RxBuffer[5]);
     }
   }
-  for (int i = 0; i < PixelStripSideL; i++){
-    StripSideL.setPixelColor(i, ArduinoDmx0.RxBuffer[60], ArduinoDmx0.RxBuffer[61], ArduinoDmx0.RxBuffer[62]);
-    StripSideR.setPixelColor(i, ArduinoDmx0.RxBuffer[63], ArduinoDmx0.RxBuffer[64], ArduinoDmx0.RxBuffer[65]);
-  }
-}
+}  // end of ISR
