@@ -1,4 +1,4 @@
 *.hex
 libraries/*
 !libraries/CapButton
-!libaries/DMXSerial
+!libraries/DMXSerial
