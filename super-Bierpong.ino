@@ -74,7 +74,7 @@ void setup() {
   StripSideL.show();
   StripSideR.show();
 
-DMXSerial.init(DMXReceiver);
+DMXSerial.init(DMXReceiver, DMXControlPin);
 }
 
 void loop() {
@@ -414,6 +414,7 @@ byte RainbowBlau(unsigned int offset){
 
 void DMX(){
   uint8_t *RxBuffer = DMXSerial.getBuffer();
+  RxBuffer = &RxBuffer + DMXStart;
   for (int i = 0; i < 10; i++){
     for (int j = 0; j < 4; j++){
       StripTriA.setPixelColor(FeldA[i][j], RxBuffer[i * 3], RxBuffer[i * 3 + 1], RxBuffer[i * 3 + 2]);
