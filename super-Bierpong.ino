@@ -3,7 +3,7 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
-#include <lib_dmx.h>
+#include <DMXSerial.h>
 
 //Pinbelegung
 const int PinStripTriA = 5;
@@ -74,12 +74,7 @@ void setup() {
   StripSideL.show();
   StripSideR.show();
 
-  ArduinoDmx0.set_control_pin(DMXControlPin);
-  ArduinoDmx0.set_rx_address(DMXStart);
-  ArduinoDmx0.set_rx_channels(66);
-  ArduinoDmx0.init_rx(DMX512);
-  pinMode(PinDMXMode,INPUT);
-  digitalWrite(PinDMXMode,LOW);
+DMXSerial.init(DMXReceiver);
 }
 
 void loop() {
@@ -418,14 +413,16 @@ byte RainbowBlau(unsigned int offset){
 }
 
 void DMX(){
+  uint8_t *RxBuffer = DMXSerial.getBuffer();
   for (int i = 0; i < 10; i++){
     for (int j = 0; j < 4; j++){
-      StripTriA.setPixelColor(FeldA[i][j], ArduinoDmx0.RxBuffer[i * 3], ArduinoDmx0.RxBuffer[i * 3 + 1], ArduinoDmx0.RxBuffer[i * 3 + 2]);
-      StripTriB.setPixelColor(FeldB[i][j], ArduinoDmx0.RxBuffer[i * 3 + 30], ArduinoDmx0.RxBuffer[i * 3 + 31], ArduinoDmx0.RxBuffer[i * 3 + 32]);
+      StripTriA.setPixelColor(FeldA[i][j], RxBuffer[i * 3], RxBuffer[i * 3 + 1], RxBuffer[i * 3 + 2]);
+      StripTriB.setPixelColor(FeldB[i][j], RxBuffer[i * 3 + 30], RxBuffer[i * 3 + 31], RxBuffer[i * 3 + 32]);
     }
   }
+
   for (int i = 0; i < PixelStripSideL; i++){
-    StripSideL.setPixelColor(i, ArduinoDmx0.RxBuffer[60], ArduinoDmx0.RxBuffer[61], ArduinoDmx0.RxBuffer[62]);
-    StripSideR.setPixelColor(i, ArduinoDmx0.RxBuffer[63], ArduinoDmx0.RxBuffer[64], ArduinoDmx0.RxBuffer[65]);
+    StripSideL.setPixelColor(i, RxBuffer[60], RxBuffer[61], RxBuffer[62]);
+    StripSideR.setPixelColor(i, RxBuffer[63], RxBuffer[64], RxBuffer[65]);
   }
 }
