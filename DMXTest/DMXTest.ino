@@ -8,13 +8,11 @@ void setup(){
 long last = 0;
 unsigned int c = 0;
 void loop(){
-  if (millis()-last > 10){
-    for(int i = 0; i <= 66, i = i + 3){
-      int offset = i*766/10+(millis()/4);
-      DMXSerial.write(i, RainbowRot(offset));
-      DMXSerial.write(i+1,RainbowGruen(offset));
-      DMXSerial.write(i+2,RainbowBlau(offset));
-    }
+  for(int i = 1; i <= 66, i = i + 3){
+    int offset = i*766/10+(millis()/4);
+    DMXSerial.write(i, RainbowRot(offset));
+    DMXSerial.write(i+1,RainbowGruen(offset));
+    DMXSerial.write(i+2,RainbowBlau(offset));
   }
 }
 
