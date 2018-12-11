@@ -63,6 +63,9 @@ uint8_t stateUmstellenButtonB;
 int RandomFieldA = 0;
 int RandomFieldB = 0;
 
+uint8_t *RXBuffer;
+long unsigned int lastupdate;
+
 void setup() {
   StripTriA.begin();
   StripTriB.begin();
@@ -75,6 +78,7 @@ void setup() {
   StripSideR.show();
 
 DMXSerial.init(DMXReceiver, DMXControlPin);
+RXBuffer = DMXSerial.getBuffer();
 }
 
 void loop() {
@@ -412,18 +416,35 @@ byte RainbowBlau(unsigned int offset){
   }
 }
 
+byte oldRXBuffer[67];
+byte newRXBuffer[67];
 void DMX(){
-  uint8_t *RxBuffer = DMXSerial.getBuffer();
-  RxBuffer = &RxBuffer + DMXStart;
-  for (int i = 0; i < 10; i++){
-    for (int j = 0; j < 4; j++){
-      StripTriA.setPixelColor(FeldA[i][j], RxBuffer[i * 3], RxBuffer[i * 3 + 1], RxBuffer[i * 3 + 2]);
-      StripTriB.setPixelColor(FeldB[i][j], RxBuffer[i * 3 + 30], RxBuffer[i * 3 + 31], RxBuffer[i * 3 + 32]);
+  if (millis() - lastupdate > 1000){
+    lastupdate= millis();
+    for (int i = 0; i < 66; i++){
+      newRXBuffer[i]=RXBuffer[i+DMXStart];
     }
-  }
 
-  for (int i = 0; i < PixelStripSideL; i++){
-    StripSideL.setPixelColor(i, RxBuffer[60], RxBuffer[61], RxBuffer[62]);
-    StripSideR.setPixelColor(i, RxBuffer[63], RxBuffer[64], RxBuffer[65]);
-  }
+    for (int i = 0; i < 66; i++){
+      if (newRXBuffer[i] ^ oldRXBuffer[i] == B00000000){
+        oldRXBuffer[i] = newRXBuffer[i];
+      }
+    }
+
+    for (int i = 0; i < 10; i++){
+      for (int j = 0; j < 4; j++){
+        StripTriA.setPixelColor(FeldA[i][j], oldRXBuffer[i*3], oldRXBuffer[i*3+1], oldRXBuffer[i*3+2]);
+        StripTriB.setPixelColor(FeldB[i][j], oldRXBuffer[i*3+30],oldRXBuffer[i*3+31], oldRXBuffer[i*3+32]);
+      }
+    }
+
+    for (int i = 0; i < PixelStripSideL; i++){
+      StripSideL.setPixelColor(i, oldRXBuffer[60], oldRXBuffer[61], oldRXBuffer[62]);
+      StripSideR.setPixelColor(i, oldRXBuffer[63], oldRXBuffer[64], oldRXBuffer[65]);
+    }
+    for (int i = 0; i < 66; i++){
+      oldRXBuffer[i]=newRXBuffer[i];
+    }
+}
+
 }
