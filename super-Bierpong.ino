@@ -418,33 +418,26 @@ byte RainbowBlau(unsigned int offset){
 
 byte oldRXBuffer[67];
 byte newRXBuffer[67];
+long lastupdate = 0;
 void DMX(){
-  if (millis() - lastupdate > 1000){
-    lastupdate= millis();
-    for (int i = 0; i < 66; i++){
-      newRXBuffer[i]=RXBuffer[i+DMXStart];
+  if ( millis() - lastupdate > 25 ){
+    lastupdate = millis;
+  for (int i = 0; i < 66; i++){
+    if (oldRXBuffer == RXBuffer[i + DMXStart]){
+      newRXBuffer[i] = oldRXBuffer[i];
     }
+    oldRXBuffer = RXBuffer[i + DMXStart];
+  }
+  for (int i = 0; i < 10; i++){
+    for (int j = 0; j < 4; j++){
+      StripTriA.setPixelColor(FeldA[i][j], newRXBuffer[i*3], newRXBuffer[i*3+1], newRXBuffer[i*3+2]);
+      StripTriB.setPixelColor(FeldB[i][j], newRXBuffer[i*3+30], newRXBuffer[i*3+31], newRXBuffer[i*3+32]);
+    }
+  }
 
-    for (int i = 0; i < 66; i++){
-      if (newRXBuffer[i] ^ oldRXBuffer[i] == B00000000){
-        oldRXBuffer[i] = newRXBuffer[i];
-      }
-    }
-
-    for (int i = 0; i < 10; i++){
-      for (int j = 0; j < 4; j++){
-        StripTriA.setPixelColor(FeldA[i][j], oldRXBuffer[i*3], oldRXBuffer[i*3+1], oldRXBuffer[i*3+2]);
-        StripTriB.setPixelColor(FeldB[i][j], oldRXBuffer[i*3+30],oldRXBuffer[i*3+31], oldRXBuffer[i*3+32]);
-      }
-    }
-
-    for (int i = 0; i < PixelStripSideL; i++){
-      StripSideL.setPixelColor(i, oldRXBuffer[60], oldRXBuffer[61], oldRXBuffer[62]);
-      StripSideR.setPixelColor(i, oldRXBuffer[63], oldRXBuffer[64], oldRXBuffer[65]);
-    }
-    for (int i = 0; i < 66; i++){
-      oldRXBuffer[i]=newRXBuffer[i];
-    }
+  for (int i = 0; i < PixelStripSideL; i++){
+    StripSideL.setPixelColor(i, newRXBuffer[60], newRXBuffer[61], newRXBuffer[62]);
+    StripSideR.setPixelColor(i, newRXBuffer[63], newRXBuffer[64], newRXBuffer[65]);
+  }
 }
-
 }
