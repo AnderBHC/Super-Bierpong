@@ -6,29 +6,28 @@
 #include <DMXSerial.h>
 
 //Pinbelegung
-const int PinStripTriA = 5;
-const int PinStripTriB = 2;
-const int PinStripSideR = 3;
-const int PinStripSideL = 4;
+#define PinStripTriA 5
+#define PinStripTriB  2
+#define PinStripSideR  3
+#define PinStripSideL  4
 
-const int PinSend = 12;
-const int PinButtonModus = 6;
-const int PinButtonUmstellenA = 7;
-const int PinButtonUmstellenB = 8;
+#define PinSend  12
+#define PinButtonModus 6
+#define PinButtonUmstellenA  7
+#define PinButtonUmstellenB  8
 
-const uint16_t DMXStart = 1; //Start Adresse für die verwendung im DMX betrieb
-const uint8_t DMXControlPin = A0; //umschalt am Transreciver
-const uint8_t PinDMXMode = A5; //Schalter zu einschalten des DMX
+#define DMXStart 1 //Start Adresse für die verwendung im DMX betrieb
+#define PinDMXControl 14 //umschalt am Transreciver
+#define PinDMXMode 19 //Schalter zum einschalten des DMX
 
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
-const int PixelStripSideR = 94;
-const int PixelStripSideL= 94;
-const int PixelStripTriA= 40;
-const int PixelStripTriB = 40;
-Adafruit_NeoPixel StripSideL = Adafruit_NeoPixel (PixelStripSideL, PinStripSideL, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel StripSideR = Adafruit_NeoPixel (PixelStripSideR, PinStripSideR, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel StripTriA = Adafruit_NeoPixel (PixelStripTriA, PinStripTriA, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel StripTriB = Adafruit_NeoPixel (PixelStripTriB, PinStripTriB, NEO_GRB + NEO_KHZ800);
+#define PixelStripSide 94
+#define PixelStripTri 40
+
+Adafruit_NeoPixel StripSideL = Adafruit_NeoPixel (PixelStripSide, PinStripSideL, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel StripSideR = Adafruit_NeoPixel (PixelStripSide, PinStripSideR, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel StripTriA = Adafruit_NeoPixel (PixelStripTri, PinStripTriA, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel StripTriB = Adafruit_NeoPixel (PixelStripTri, PinStripTriB, NEO_GRB + NEO_KHZ800);
 
 //Konstruktor für die Sensoren CapacitiveSensor(send,read)
 CapacitiveSensor SensorModus = CapacitiveSensor(PinSend, PinButtonModus);
@@ -366,18 +365,16 @@ void Rainbow(){
   }
   Flipcup();
 }
-
 void Flipcup(){
   if (Modus != oldModus){
     oldModus = Modus;
   }
-  for (int i = 0; i < PixelStripSideL; i++){
+  for (int i = 0; i < PixelStripSide; i++){
     long unsigned int offset = i+(millis()/100);
     StripSideL.setPixelColor(i, RainbowRot(offset) ,RainbowGruen(offset), RainbowBlau(offset));
     StripSideR.setPixelColor(i, RainbowRot(offset), RainbowGruen(offset), RainbowBlau(offset));
   }
 }
-
 byte RainbowRot(unsigned int offset){
   int c = offset%766;
   if (c >= 0 && c <= 255){
