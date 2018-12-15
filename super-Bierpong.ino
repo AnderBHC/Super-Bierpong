@@ -63,7 +63,7 @@ int RandomFieldA = 0;
 int RandomFieldB = 0;
 
 uint8_t *RXBuffer;
-long unsigned int lastupdate;
+uint8_t oldRXBuffer[67];
 
 void setup() {
   StripTriA.begin();
@@ -76,14 +76,18 @@ void setup() {
   StripSideL.show();
   StripSideR.show();
 
-DMXSerial.init(DMXReceiver, DMXControlPin);
-RXBuffer = DMXSerial.getBuffer();
+  pinMode(PinDMXMode,INPUT);
+
+  DMXSerial.init(DMXProbe, PinDMXControl);
+  RXBuffer = DMXSerial.getBuffer();
 }
 
 void loop() {
   boolean DMXOn = digitalRead(PinDMXMode);
-  switch (DMXOn){
-    case(0):
+if ( DMXOn == HIGH){
+  DMX();
+}
+else{
 //verarbeitung der eingabe der Kapizitativen Taster
 //0 keine eingabe | 1 normaler klick
     stateModusButton = ButtonModus.update();
@@ -120,13 +124,7 @@ void loop() {
         Flipcup();
         break;
       }
-      break;
-
-    case(1):
-      DMX();
-      break;
-  }
-
+    }
   StripTriA.show();
   StripTriB.show();
   StripSideL.show();
@@ -142,13 +140,13 @@ void Bierpong(){
   if (stateUmstellenButtonB == 1){
     PunkteTeamB ++;
   }
-  if (PunkteTeamB > 3){
+  if (PunkteTeamB > 2){
     PunkteTeamB = 0;
   }
   if (stateUmstellenButtonA == 1){
     PunkteTeamA ++;
   }
-  if (PunkteTeamA > 3){
+  if (PunkteTeamA > 2){
     PunkteTeamA = 0;
   }
   switch (PunkteTeamA){
@@ -412,29 +410,40 @@ byte RainbowBlau(unsigned int offset){
     return 765 - c;
   }
 }
-
-byte oldRXBuffer[67];
-byte newRXBuffer[67];
-long lastupdate = 0;
 void DMX(){
-  if ( millis() - lastupdate > 25 ){
-    lastupdate = millis;
-  for (int i = 0; i < 66; i++){
-    if (oldRXBuffer == RXBuffer[i + DMXStart]){
-      newRXBuffer[i] = oldRXBuffer[i];
+  while (DMXSerial.receive(1000)){
+    for ( int i = 0; i < 66; i = i+3){
+    if (oldRXBuffer[i] == RXBuffer[i + DMXStart]
+      && oldRXBuffer[i + 1] == RXBuffer[i + 1 + DMXStart]
+      && oldRXBuffer[i + 2] == RXBuffer[i + 2 + DMXStart]){
+      setFielColor(i/3,oldRXBuffer[i], oldRXBuffer[i+1], oldRXBuffer[i+2]);
     }
-    oldRXBuffer = RXBuffer[i + DMXStart];
-  }
-  for (int i = 0; i < 10; i++){
-    for (int j = 0; j < 4; j++){
-      StripTriA.setPixelColor(FeldA[i][j], newRXBuffer[i*3], newRXBuffer[i*3+1], newRXBuffer[i*3+2]);
-      StripTriB.setPixelColor(FeldB[i][j], newRXBuffer[i*3+30], newRXBuffer[i*3+31], newRXBuffer[i*3+32]);
+    oldRXBuffer[i]=RXBuffer[i + DMXStart];
+    oldRXBuffer[i+1] = RXBuffer[i + DMXStart + 1];
+    oldRXBuffer[i+2] = RXBuffer[i + DMXStart + 2];
     }
-  }
-
-  for (int i = 0; i < PixelStripSideL; i++){
-    StripSideL.setPixelColor(i, newRXBuffer[60], newRXBuffer[61], newRXBuffer[62]);
-    StripSideR.setPixelColor(i, newRXBuffer[63], newRXBuffer[64], newRXBuffer[65]);
   }
 }
+
+void setFielColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
+  if (field < 10){
+    for (int i = 0; i < 4; i++){
+      StripTriA.setPixelColor(FeldA[field][i], red, green, blue);
+    }
+  }
+  else if (field < 20){
+    for (int i = 0; i < 4; i++){
+      StripTriB.setPixelColor(FeldB[field-10][i], red, green, blue);
+    }
+  }
+  else if (field == 20){
+    for (int i = 0; i < PixelStripSide; i++){
+      StripSideL.setPixelColor(i, red, blue, green);
+    }
+  }
+  else if (field = 21){
+    for(int i = 0; i < PixelStripSide; i++){
+      StripSideR.setPixelColor(i, red, blue, green);
+    }
+  }
 }
