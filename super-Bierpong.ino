@@ -63,7 +63,6 @@ int RandomFieldA = 0;
 int RandomFieldB = 0;
 
 uint8_t *RXBuffer;
-uint8_t oldRXBuffer[67];
 
 void setup() {
   StripTriA.begin();
@@ -411,21 +410,14 @@ byte RainbowBlau(unsigned int offset){
   }
 }
 void DMX(){
-  while (DMXSerial.receive(1000)){
-    for ( int i = 0; i < 66; i = i+3){
-    if (oldRXBuffer[i] == RXBuffer[i + DMXStart]
-      && oldRXBuffer[i + 1] == RXBuffer[i + 1 + DMXStart]
-      && oldRXBuffer[i + 2] == RXBuffer[i + 2 + DMXStart]){
-      setFielColor(i/3,oldRXBuffer[i], oldRXBuffer[i+1], oldRXBuffer[i+2]);
-    }
-    oldRXBuffer[i]=RXBuffer[i + DMXStart];
-    oldRXBuffer[i+1] = RXBuffer[i + DMXStart + 1];
-    oldRXBuffer[i+2] = RXBuffer[i + DMXStart + 2];
+  if(DMXSerial.receive()){
+    for ( int i = 0; i < 22; i = i++){
+      setFieldColor(i,RXBuffer[i+DMXStart],RXBuffer[i+DMXStart+1],RXBuffer[i+DMXStart+2]);
     }
   }
 }
 
-void setFielColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
+void setFieldColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
   if (field < 10){
     for (int i = 0; i < 4; i++){
       StripTriA.setPixelColor(FeldA[field][i], red, green, blue);
@@ -441,7 +433,7 @@ void setFielColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
       StripSideL.setPixelColor(i, red, blue, green);
     }
   }
-  else if (field = 21){
+  else if (field == 21){
     for(int i = 0; i < PixelStripSide; i++){
       StripSideR.setPixelColor(i, red, blue, green);
     }
