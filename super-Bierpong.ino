@@ -16,10 +16,6 @@
 #define PinButtonUmstellenA  7
 #define PinButtonUmstellenB  8
 
-#define DMXStart 1 //Start Adresse für die verwendung im DMX betrieb
-#define PinDMXControl 14 //umschalt am Transreciver
-#define PinDMXMode 19 //Schalter zum einschalten des DMX
-
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
 #define PixelStripSide 94
 #define PixelStripTri 40
