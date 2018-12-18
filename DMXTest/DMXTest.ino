@@ -3,31 +3,17 @@
 void setup(){
   DMXSerial.init(DMXController);
   DMXSerial.maxChannel(66);
-  for ( int i = 1; i <= 66; i++){
-    DMXSerial.write(i,0);
-  }
 }
 
 long last = 0;
-int i = 1;
+unsigned int c = 0;
 void loop(){
-  
-  DMXSerial.write(1,255);
-/*
-    DMXSerial.write(max(i-3, 0), 0);
-    DMXSerial.write(max(i-2, 0), 0);
-    DMXSerial.write(max(i-1, 0), 0);
-    DMXSerial.write(i, 255);
-    DMXSerial.write(i + 1, 255);
-    DMXSerial.write(i + 2, 255);
-    if (millis()-last > 500){
-      i = i + 3;
-      if (i > 66){
-        i = 1;
-      }
-      last = millis();
-    }
-    */
+  for(int i = 1; i <= 66, i = i + 3){
+    int offset = i*766/10+(millis()/4);
+    DMXSerial.write(i, RainbowRot(offset));
+    DMXSerial.write(i+1,RainbowGruen(offset));
+    DMXSerial.write(i+2,RainbowBlau(offset));
+  }
 }
 
 byte RainbowRot(unsigned int offset){
