@@ -3,7 +3,7 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
-#include <DMXSerial.h>
+
 
 //Pinbelegung
 #define PinStripTriA 5
@@ -15,10 +15,6 @@
 #define PinButtonModus 6
 #define PinButtonUmstellenA  7
 #define PinButtonUmstellenB  8
-
-#define DMXStart 1 //Start Adresse für die verwendung im DMX betrieb
-#define PinDMXControl 14 //umschalt am Transreciver
-#define PinDMXMode 19 //Schalter zum einschalten des DMX
 
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
 #define PixelStripSide 94
@@ -62,9 +58,6 @@ uint8_t stateUmstellenButtonB;
 int RandomFieldA = 0;
 int RandomFieldB = 0;
 
-uint8_t *RXBuffer;
-uint8_t oldRXBuffer[67];
-
 void setup() {
   StripTriA.begin();
   StripTriB.begin();
@@ -76,20 +69,11 @@ void setup() {
   StripSideL.show();
   StripSideR.show();
 
-  pinMode(PinDMXMode,INPUT);
-
-  DMXSerial.init(DMXProbe, PinDMXControl);
-  RXBuffer = DMXSerial.getBuffer();
 }
 
 void loop() {
-  boolean DMXOn = digitalRead(PinDMXMode);
-if ( DMXOn == HIGH){
-  DMX();
-}
-else{
-//verarbeitung der eingabe der Kapizitativen Taster
-//0 keine eingabe | 1 normaler klick
+      //verarbeitung der eingabe der Kapizitativen Taster
+      //0 keine eingabe | 1 normaler klick
     stateModusButton = ButtonModus.update();
     stateUmstellenButtonA = ButtonUmstellenA.update();
     stateUmstellenButtonB = ButtonUmstellenB.update();
@@ -123,12 +107,16 @@ else{
       case(3):
         Flipcup();
         break;
-      }
     }
+
+
+
   StripTriA.show();
   StripTriB.show();
   StripSideL.show();
   StripSideR.show();
+
+
 }
 
 void Bierpong(){
@@ -408,42 +396,5 @@ byte RainbowBlau(unsigned int offset){
   }
   if (c >= 510){
     return 765 - c;
-  }
-}
-void DMX(){
-  while (DMXSerial.receive(1000)){
-    for ( int i = 0; i < 66; i = i+3){
-    if (oldRXBuffer[i] == RXBuffer[i + DMXStart]
-      && oldRXBuffer[i + 1] == RXBuffer[i + 1 + DMXStart]
-      && oldRXBuffer[i + 2] == RXBuffer[i + 2 + DMXStart]){
-      setFielColor(i/3,oldRXBuffer[i], oldRXBuffer[i+1], oldRXBuffer[i+2]);
-    }
-    oldRXBuffer[i]=RXBuffer[i + DMXStart];
-    oldRXBuffer[i+1] = RXBuffer[i + DMXStart + 1];
-    oldRXBuffer[i+2] = RXBuffer[i + DMXStart + 2];
-    }
-  }
-}
-
-void setFielColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
-  if (field < 10){
-    for (int i = 0; i < 4; i++){
-      StripTriA.setPixelColor(FeldA[field][i], red, green, blue);
-    }
-  }
-  else if (field < 20){
-    for (int i = 0; i < 4; i++){
-      StripTriB.setPixelColor(FeldB[field-10][i], red, green, blue);
-    }
-  }
-  else if (field == 20){
-    for (int i = 0; i < PixelStripSide; i++){
-      StripSideL.setPixelColor(i, red, blue, green);
-    }
-  }
-  else if (field = 21){
-    for(int i = 0; i < PixelStripSide; i++){
-      StripSideR.setPixelColor(i, red, blue, green);
-    }
   }
 }
