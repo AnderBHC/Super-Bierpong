@@ -70,6 +70,9 @@ void setup() {
   StripSideL.begin();
   StripSideR.begin();
 
+  StripSideL.setBrightness(80);
+  StripSideR.setBrightness(80);
+
   StripTriA.clear();
   StripTriB.clear();
   StripSideL.clear();
