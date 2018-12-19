@@ -1,69 +1,83 @@
 #include <DMXSerial.h>
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+  #include <avr/power.h>
+#endif
+
+#define PinStripTriA 5
+#define PinStripTriB  2
+#define PinStripSideR  3
+#define PinStripSideL  4
+
+#define PixelStripSide 94
+#define PixelStripTri 40
+
+uint8_t *RXBuffer;
+
+Adafruit_NeoPixel StripSideL = Adafruit_NeoPixel (PixelStripSide, PinStripSideL, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel StripSideR = Adafruit_NeoPixel (PixelStripSide, PinStripSideR, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel StripTriA = Adafruit_NeoPixel (PixelStripTri, PinStripTriA, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel StripTriB = Adafruit_NeoPixel (PixelStripTri, PinStripTriB, NEO_GRB + NEO_KHZ800);
+
+
+const byte FeldB[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{0,1,14,15},{2,3,12,13},{4,5,10,11},{6,7,8,9}};
+const byte FeldA[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{6,7,14,15},{4,5,12,13},{2,3,10,11},{0,1,8,9}};
 
 void setup(){
-  DMXSerial.init(DMXController);
-  DMXSerial.maxChannel(66);
-  for ( int i = 1; i <= 66; i++){
-    DMXSerial.write(i,0);
-  }
+  StripTriA.begin();
+  StripTriB.begin();
+  StripSideL.begin();
+  StripSideR.begin();
+
+  StripTriA.clear();
+  StripTriB.clear();
+  StripSideL.clear();
+  StripSideR.clear();
+
+  StripTriA.show();
+  StripTriB.show();
+  StripSideL.show();
+  StripSideR.show();
+
+  DMXSerial.init(DMXProbe,13);
+  RXBuffer = DMXSerial.getBuffer();
+
 }
 
-long last = 0;
-int i = 1;
+
 void loop(){
-  
-  DMXSerial.write(1,255);
-/*
-    DMXSerial.write(max(i-3, 0), 0);
-    DMXSerial.write(max(i-2, 0), 0);
-    DMXSerial.write(max(i-1, 0), 0);
-    DMXSerial.write(i, 255);
-    DMXSerial.write(i + 1, 255);
-    DMXSerial.write(i + 2, 255);
-    if (millis()-last > 500){
-      i = i + 3;
-      if (i > 66){
-        i = 1;
-      }
-      last = millis();
-    }
-    */
+
+  if (DMXSerial.receive()){
+    for (int i = 0; i < 22; i++)
+    setFieldColor(i,RXBuffer[i*3+1],RXBuffer[i*3+2],RXBuffer[i*3+3]);
+
+  }
+    StripTriA.show();
+    StripTriB.show();
+    StripSideL.show();
+    StripSideR.show();
+
 }
 
-byte RainbowRot(unsigned int offset){
-  int c = offset%766;
-  if (c >= 0 && c <= 255){
-    return 255 - c;
+void setFieldColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
+  if (field < 10){
+    for (int i = 0; i < 4; i++){
+      StripTriA.setPixelColor(FeldA[field][i], red, green, blue);
+    }
   }
-  if (c > 255 && c <= 510) {
-    return 0;
-  }
-  if (c > 510){
-    return c - 510;
-  }
-}
-byte RainbowGruen(unsigned int offset){
-  int c = offset%766;
-  byte color;
-  if (c >= 0 && c <= 255){
-    return c;
-  }
-  if (c > 255 && c <= 510){
-    return 510 - c;
-  }
-  if(c > 510){
-    return 0;
-  }
-}
-byte RainbowBlau(unsigned int offset){
-  int c = offset%766;
-  if(c >= 0 && c <= 255){
-    return 0;
-  }
-  if (c>=256 && c<510){
-    return c - 255;
-  }
-  if (c >= 510){
-    return 765 - c;
-  }
+    else if (field < 20){
+      for(int i = 0; i < 4; i++){
+        StripTriB.setPixelColor(FeldB[field-10][i], red, green, blue);
+      }
+    }
+    else if (field == 20){
+      for (int i = 0; i < PixelStripSide; i++){
+        StripSideL.setPixelColor(i, red, green, blue);
+      }
+    }
+    else if (field == 21){
+      for(int i = 0; i < PixelStripSide; i++){
+        StripSideR.setPixelColor(i, red, green, blue);
+      }
+    }
 }

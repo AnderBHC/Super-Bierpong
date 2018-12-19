@@ -16,6 +16,13 @@
 #define PinButtonUmstellenA  7
 #define PinButtonUmstellenB  8
 
+<<<<<<< HEAD
+=======
+
+#define PinDMXControl 13 //umschalt am Transreciver nicht benutzt
+#define PinDMXMode A5 //Schalter zum einschalten des DMX
+
+>>>>>>> DMX
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
 #define PixelStripSide 94
 #define PixelStripTri 40
@@ -58,23 +65,51 @@ uint8_t stateUmstellenButtonB;
 int RandomFieldA = 0;
 int RandomFieldB = 0;
 
+<<<<<<< HEAD
+=======
+uint8_t *RXBuffer;
+
+>>>>>>> DMX
 void setup() {
   StripTriA.begin();
   StripTriB.begin();
   StripSideL.begin();
   StripSideR.begin();
 
+  StripTriA.clear();
+  StripTriB.clear();
+  StripSideL.clear();
+  StripSideR.clear();
+
   StripTriA.show();
   StripTriB.show();
   StripSideL.show();
   StripSideR.show();
 
+<<<<<<< HEAD
 }
 
 void loop() {
 
+=======
+  pinMode(PinDMXMode,INPUT);
+
+  DMXSerial.init(DMXProbe, PinDMXMode);
+  RXBuffer = DMXSerial.getBuffer();
+}
+
+void loop() {
+  if(digitalRead(PinDMXMode) == HIGH){
+    if (DMXSerial.receive()){
+      for (int i = 0; i < 22; i++){
+        setFieldColor(i,RXBuffer[i*3+1],RXBuffer[i*3+2],RXBuffer[i*3+3]);
+      }
+    }
+  }
+>>>>>>> DMX
 //verarbeitung der eingabe der Kapizitativen Taster
 //0 keine eingabe | 1 normaler klick
+  else {
     stateModusButton = ButtonModus.update();
     stateUmstellenButtonA = ButtonUmstellenA.update();
     stateUmstellenButtonB = ButtonUmstellenB.update();
@@ -395,9 +430,19 @@ byte RainbowBlau(unsigned int offset){
     return 765 - c;
   }
 }
+<<<<<<< HEAD
 
+=======
+void DMX(){
+  if(DMXSerial.receive()){
+    for ( int i = 0; i < 22; i = i++){
+      setFieldColor(i,RXBuffer[i*3+1],RXBuffer[i*3+2],RXBuffer[i*3+3]);
+    }
+  }
+}
+>>>>>>> DMX
 
-void setFielColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
+void setFieldColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
   if (field < 10){
     for (int i = 0; i < 4; i++){
       StripTriA.setPixelColor(FeldA[field][i], red, green, blue);
@@ -410,12 +455,12 @@ void setFielColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
   }
   else if (field == 20){
     for (int i = 0; i < PixelStripSide; i++){
-      StripSideL.setPixelColor(i, red, blue, green);
+      StripSideL.setPixelColor(i, red, green, blue);
     }
   }
-  else if (field = 21){
+  else if (field == 21){
     for(int i = 0; i < PixelStripSide; i++){
-      StripSideR.setPixelColor(i, red, blue, green);
+      StripSideR.setPixelColor(i, red, green, blue);
     }
   }
 }
