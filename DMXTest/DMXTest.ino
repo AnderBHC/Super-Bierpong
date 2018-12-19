@@ -34,6 +34,9 @@ void setup(){
   StripSideL.clear();
   StripSideR.clear();
 
+  StripSideL.setBrightnes(80);
+  StripSideR.setBrightnes(80);
+
   StripTriA.show();
   StripTriB.show();
   StripSideL.show();
