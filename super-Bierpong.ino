@@ -75,6 +75,9 @@ void setup() {
   StripSideL.clear();
   StripSideR.clear();
 
+  StripSideL.setBrightness(80);
+  StripSideR.setBrightness(80);
+
   StripTriA.show();
   StripTriB.show();
   StripSideL.show();
@@ -82,7 +85,7 @@ void setup() {
 
   pinMode(PinDMXMode,INPUT);
 
-  DMXSerial.init(DMXProbe, PinDMXMode);
+  DMXSerial.init(DMXProbe, PinDMXControl);
   RXBuffer = DMXSerial.getBuffer();
 }
 
