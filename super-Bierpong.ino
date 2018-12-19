@@ -16,13 +16,10 @@
 #define PinButtonUmstellenA  7
 #define PinButtonUmstellenB  8
 
-<<<<<<< HEAD
-=======
 
 #define PinDMXControl 13 //umschalt am Transreciver nicht benutzt
 #define PinDMXMode A5 //Schalter zum einschalten des DMX
 
->>>>>>> DMX
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
 #define PixelStripSide 94
 #define PixelStripTri 40
@@ -65,11 +62,8 @@ uint8_t stateUmstellenButtonB;
 int RandomFieldA = 0;
 int RandomFieldB = 0;
 
-<<<<<<< HEAD
-=======
 uint8_t *RXBuffer;
 
->>>>>>> DMX
 void setup() {
   StripTriA.begin();
   StripTriB.begin();
@@ -86,12 +80,6 @@ void setup() {
   StripSideL.show();
   StripSideR.show();
 
-<<<<<<< HEAD
-}
-
-void loop() {
-
-=======
   pinMode(PinDMXMode,INPUT);
 
   DMXSerial.init(DMXProbe, PinDMXMode);
@@ -106,7 +94,6 @@ void loop() {
       }
     }
   }
->>>>>>> DMX
 //verarbeitung der eingabe der Kapizitativen Taster
 //0 keine eingabe | 1 normaler klick
   else {
@@ -430,9 +417,6 @@ byte RainbowBlau(unsigned int offset){
     return 765 - c;
   }
 }
-<<<<<<< HEAD
-
-=======
 void DMX(){
   if(DMXSerial.receive()){
     for ( int i = 0; i < 22; i = i++){
@@ -440,7 +424,6 @@ void DMX(){
     }
   }
 }
->>>>>>> DMX
 
 void setFieldColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
   if (field < 10){
