@@ -17,8 +17,8 @@
 #define PinButtonUmstellenB  8
 
 
-#define PinDMXControl 14 //umschalt am Transreciver
-#define PinDMXMode 19 //Schalter zum einschalten des DMX
+#define PinDMXControl 13 //umschalt am Transreciver nicht benutzt
+#define PinDMXMode A5 //Schalter zum einschalten des DMX
 
 //konstruktor für den LED streifen (Anzahl LEDs, Angeschlossener PIN, Modus)
 #define PixelStripSide 94
@@ -70,25 +70,33 @@ void setup() {
   StripSideL.begin();
   StripSideR.begin();
 
+  StripTriA.clear();
+  StripTriB.clear();
+  StripSideL.clear();
+  StripSideR.clear();
+
   StripTriA.show();
   StripTriB.show();
   StripSideL.show();
   StripSideR.show();
 
   pinMode(PinDMXMode,INPUT);
-  pinMode(10,OUTPUT);
-  DMXSerial.init(DMXProbe, PinDMXControl);
+
+  DMXSerial.init(DMXProbe, PinDMXMode);
   RXBuffer = DMXSerial.getBuffer();
 }
 
 void loop() {
-  boolean DMXOn = digitalRead(PinDMXMode);
-if ( DMXOn == HIGH){
-  DMX();
-}
-else{
+  if(digitalRead(PinDMXMode) == HIGH){
+    if (DMXSerial.receive()){
+      for (int i = 0; i < 22; i++){
+        setFieldColor(i,RXBuffer[i*3+1],RXBuffer[i*3+2],RXBuffer[i*3+3]);
+      }
+    }
+  }
 //verarbeitung der eingabe der Kapizitativen Taster
 //0 keine eingabe | 1 normaler klick
+  else {
     stateModusButton = ButtonModus.update();
     stateUmstellenButtonA = ButtonUmstellenA.update();
     stateUmstellenButtonB = ButtonUmstellenB.update();
@@ -411,7 +419,6 @@ byte RainbowBlau(unsigned int offset){
 }
 void DMX(){
   if(DMXSerial.receive()){
-    analogWrite(10,RXBuffer[1]);
     for ( int i = 0; i < 22; i = i++){
       setFieldColor(i,RXBuffer[i*3+1],RXBuffer[i*3+2],RXBuffer[i*3+3]);
     }
@@ -431,12 +438,12 @@ void setFieldColor(uint8_t field, uint8_t red, uint8_t green, uint8_t blue){
   }
   else if (field == 20){
     for (int i = 0; i < PixelStripSide; i++){
-      StripSideL.setPixelColor(i, red, blue, green);
+      StripSideL.setPixelColor(i, red, green, blue);
     }
   }
   else if (field == 21){
     for(int i = 0; i < PixelStripSide; i++){
-      StripSideR.setPixelColor(i, red, blue, green);
+      StripSideR.setPixelColor(i, red, green, blue);
     }
   }
 }
