@@ -16,7 +16,7 @@
 #define PinButtonUmstellenA  7
 #define PinButtonUmstellenB  8
 
-#define DMXStart 1 //Start Adresse für die verwendung im DMX betrieb
+
 #define PinDMXControl 14 //umschalt am Transreciver
 #define PinDMXMode 19 //Schalter zum einschalten des DMX
 
@@ -76,7 +76,7 @@ void setup() {
   StripSideR.show();
 
   pinMode(PinDMXMode,INPUT);
-
+  pinMode(10,OUTPUT);
   DMXSerial.init(DMXProbe, PinDMXControl);
   RXBuffer = DMXSerial.getBuffer();
 }
@@ -411,8 +411,9 @@ byte RainbowBlau(unsigned int offset){
 }
 void DMX(){
   if(DMXSerial.receive()){
+    analogWrite(10,RXBuffer[1]);
     for ( int i = 0; i < 22; i = i++){
-      setFieldColor(i,RXBuffer[i+DMXStart],RXBuffer[i+DMXStart+1],RXBuffer[i+DMXStart+2]);
+      setFieldColor(i,RXBuffer[i*3+1],RXBuffer[i*3+2],RXBuffer[i*3+3]);
     }
   }
 }
