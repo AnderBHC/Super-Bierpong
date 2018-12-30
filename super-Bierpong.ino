@@ -3,7 +3,9 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
-//#include <DMXSerial.h>
+#include <DMXSerial.h>
+
+#define DMXStartAddress 1
 
 //Pinbelegung
 #define PinStripTriA 5
@@ -90,6 +92,7 @@ void setup() {
 
   DMXSerial.init(DMXProbe, PinDMXControl);
   RXBuffer = DMXSerial.getBuffer();
+  DMXSerial.setStartAddress(DMXStartAddress);
 }
 
 void loop() {
@@ -143,7 +146,7 @@ void loop() {
   StripSideL.show();
   StripSideR.show();
 }
-
+}
 void Bierpong(){
   if (Modus != oldModus){
     oldModus = Modus;
