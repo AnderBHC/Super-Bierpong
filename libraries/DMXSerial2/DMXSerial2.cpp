@@ -1,4 +1,4 @@
-DMXSerial2// - - - - -
+//DMXSerial2// - - - - -
 // DMXSerial - A Arduino library for sending and receiving DMX using the builtin serial hardware port.
 // DMXSerial2.cpp: Library implementation file
 //
@@ -11,7 +11,7 @@ DMXSerial2// - - - - -
 
 #include "Arduino.h"
 
-#include "DMXSerial.h"
+#include "DMXSerial2.h"
 #include <avr/interrupt.h>
 
 // ----- Constants -----
