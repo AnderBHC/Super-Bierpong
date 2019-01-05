@@ -14,7 +14,8 @@ class CapButton
 	   int update();
   private:
 	CapacitiveSensor *_Sensor;
-	long treshhold;
+	long treshholdHigh;
+  long treshholdLow;
   boolean oldstate;
   long lastDebounce;
 	boolean clickEnded;

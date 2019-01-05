@@ -8,14 +8,18 @@ CapButton::CapButton(CapacitiveSensor& Sensor){
 	oldstate = LOW;
 	clickEnded = true;
 	debouncetime = 100;
-	treshhold = 1000;
+	treshholdHigh = 1000;
+	treshholdLow = 500;
 }
 
 int CapButton::update(){
 	long total = _Sensor->capacitiveSensor(100);
-	boolean state = LOW;
-	if (total > treshhold){
+	boolean state = oldstate;
+	if (state == LOW && total > treshholdHigh){
 		state = HIGH;
+	}
+	else if(state == HIGH && total < treshholdLow){
+		state = LOW;
 	}
 	//steigende flanke
 	if (state == HIGH && millis() - lastDebounce > debouncetime && clickEnded == true) {
