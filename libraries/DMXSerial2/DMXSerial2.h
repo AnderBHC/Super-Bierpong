@@ -1,10 +1,10 @@
 // - - - - -
 // DMXSerial - A Arduino library for sending and receiving DMX using the builtin serial hardware port.
 // DMXSerial.h: Library header file
-// 
+//
 // Copyright (c) 2011-2014 by Matthias Hertel, http://www.mathertel.de
 // This work is licensed under a BSD style license. See http://www.mathertel.de/License.aspx
-// 
+//
 // Documentation and samples are available at http://www.mathertel.de/Arduino
 // 25.07.2011 creation of the DMXSerial library.
 // 10.09.2011 fully control the serial hardware register
@@ -20,7 +20,7 @@
 // 15.05.2013 Arduino Leonard and Arduino MEGA compatibility
 // 19.05.2013 ATmega8 compatibility (beta)
 // 24.08.2013 Optimizations for speed and size.
-//            Removed some "volatile" annotations. 
+//            Removed some "volatile" annotations.
 // 12.07.2014 added update flag
 // 19.03.2015 DMXModePin as optional parameter
 // 25.08.2016 SCOPEDEBUG removed.
@@ -33,8 +33,8 @@
 //            This allows the usage of multiple ws8212 LEDs.
 // - - - - -
 
-#ifndef DmxSerial_h
-#define DmxSerial_h
+#ifndef DMXSerial2_h
+#define DMXSerial2_h
 
 #include <avr/io.h>
 
@@ -53,7 +53,7 @@
 /**
  * Mode of Operation
  */
-typedef enum { 
+typedef enum {
   DMXNone, // unspecified
   DMXController , // always sending
   DMXReceiver,   // always listening
@@ -68,7 +68,7 @@ extern "C" {
 
 /**
  * @brief Arduino library to send and receive DMXX.
- *  
+ *
  * The library works unchanged with the Arduino 2009, UNO, MGEA 2560 and Leonardo boards. <br />
  * The Arduino MGEA 2560 boards use the serial port 0 on pins 0 an 1. <br />
  * The Arduino Leonardo will use serial port 1, also on pins 0 an 1. (on the 32u4 boards the first USART is USART1) <br />
@@ -79,26 +79,26 @@ class DMXSerialClass
   public:
     /**
      * @brief Initialize or re-initialize the specified mode.
-     * This function can be called to switch to restart or switch the operatin mode. 
+     * This function can be called to switch to restart or switch the operatin mode.
      * @param [in] mode The mode of operation to be started. A value from enum DMXMode;
-     * @return void    
+     * @return void
      */
     void    init (int mode);
 
 
     /**
      * @brief Initialize the specified mode including a specific mode pin.
-     * This function can be called to switch to restart or switch the operatin mode. 
+     * This function can be called to switch to restart or switch the operatin mode.
      * @param [in] mode The mode of operation to be started. A value from enum DMXMode;
      * @param [in] modePin The pin number for switching communication direction.
-     * @return void    
+     * @return void
      */
     void    init (int mode, int modePin);
 
     /**
      * @brief Set the maximum used channel for DMXController mode.
-     * @param [in] channel The highest channel that will be transferred. 
-     * @return void    
+     * @param [in] channel The highest channel that will be transferred.
+     * @return void
      */
     void    maxChannel (int channel);
 
@@ -121,11 +121,11 @@ class DMXSerialClass
 
     /**
      * @brief Get a pointer to DMX Buffer.
-     * This is the internal byte-array where the current DMX values are stored. 
+     * This is the internal byte-array where the current DMX values are stored.
      * @return uint8_t DMX values buffer.
      */
     uint8_t *getBuffer();
-    
+
     /**
      * @brief Return the duration since data was received.
      * On startup the internal timer is reset too.
@@ -162,7 +162,7 @@ class DMXSerialClass
      * @return false after timeout no package was received.
      */
     bool receive(uint8_t wait);
-    
+
     /**
      * @brief Terminate the current operation mode.
      */

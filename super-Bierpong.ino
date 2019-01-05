@@ -3,7 +3,7 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
-#include <DMXSerial.h>
+#include <DMXSerial2.h>
 
 #define DMXStartAddress 1
 

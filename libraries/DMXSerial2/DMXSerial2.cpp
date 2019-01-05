@@ -1,6 +1,6 @@
-// - - - - -
+DMXSerial2// - - - - -
 // DMXSerial - A Arduino library for sending and receiving DMX using the builtin serial hardware port.
-// DMXSerial.cpp: Library implementation file
+// DMXSerial2.cpp: Library implementation file
 //
 // Copyright (c) 2011 by Matthias Hertel, http://www.mathertel.de
 // This work is licensed under a BSD style license. See http://www.mathertel.de/License.aspx
@@ -244,12 +244,12 @@ void DMXSerialClass::init(int mode, int dmxModePin)
     // Setup external mode signal
     pinMode(_dmxModePin, OUTPUT); // enables the pin for output to control data direction
     digitalWrite(_dmxModePin, DmxModeIn); // data in direction, to avoid problems on the DMX line for now.
-    
+
     if (_dmxMode == DMXController) {
       digitalWrite(_dmxModePin, DmxModeOut); // data Out direction
       _dmxMaxChannel = 32; // The default in Controller mode is sending 32 channels.
       _DMXStartSending();
-      
+
     } else if (_dmxMode == DMXReceiver) {
       // Setup Hardware
       _DMXStartReceiving();
@@ -306,7 +306,7 @@ void DMXSerialClass::write(int channel, uint8_t value)
 } // write()
 
 
-// Return the DMX buffer of unsave direct but faster access 
+// Return the DMX buffer of unsave direct but faster access
 uint8_t *DMXSerialClass::getBuffer()
 {
   return(_dmxData);
@@ -356,14 +356,14 @@ bool DMXSerialClass::receive(uint8_t wait)
       delay(1);
       wait--;
     } // while
-   
+
     if (_dmxRecvState == DONE) {
       ret = true;
     } else {
       _DMXSerialInit(Calcprescale(DMXSPEED), (1 << RXENn), DMXFORMAT);
     } // if
   } // if
-  
+
   return(ret);
 } // receive(wait)
 
@@ -397,7 +397,7 @@ void _DMXSerialInit(uint16_t baud_setting, uint8_t mode, uint8_t format)
 
   // enable USART functions RX, TX, Interrupts
   UCSRnB = mode;
-  
+
   // 2 stop bits and 8 bit character size, no parity
   UCSRnC = format;
 } // _DMXSerialInit
@@ -424,7 +424,7 @@ void _DMXStartReceiving()
   _dmxRecvState = STARTUP;
 
   _DMXSerialInit(Calcprescale(DMXSPEED), (1 << RXENn) | (1 << RXCIEn), DMXFORMAT);
-  // delay(10);  
+  // delay(10);
   // flush all incomming data packets in the queue
   while (UCSRnA & (1<<RXCn))
     voiddata = UDRn; // get data
