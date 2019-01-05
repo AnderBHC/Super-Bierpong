@@ -2,3 +2,4 @@
 libraries/*
 !libraries/CapButton
 !libraries/CapacitiveSensor
+!libraries/DMXSerial2
