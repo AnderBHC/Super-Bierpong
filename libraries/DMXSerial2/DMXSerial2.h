@@ -40,7 +40,7 @@
 
 // ----- Constants -----
 
-#define DMXSERIAL_MAX 512 ///< max. number of supported DMX data channels
+#define DMXSERIAL_MAX 66 ///< max. number of supported DMX data channels
 
 #define DMXMODEPIN 2     ///< Arduino pin 2 for controlling the data direction is the default value.
 #define DmxModeOut HIGH  ///< set the level to HIGH for outgoing data direction
