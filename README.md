@@ -1,4 +1,5 @@
 # Super-Bierpong
+Es wird zusätzlich noch die Capacitive Sensor Bibliothek benötigt. https://github.com/PaulStoffregen/CapacitiveSensor
 
 DMX:
 Für den DMX Modus den Schalter auf dem Deckel des gehäuses auf DMX Stellen.
