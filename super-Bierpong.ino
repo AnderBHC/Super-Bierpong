@@ -45,9 +45,10 @@ uint8_t oldModus = 0;
 uint8_t PunkteTeamA = 0; //0 alle | 1 Blume | 2 diamant
 uint8_t PunkteTeamB = 0; //0 alle | 1 Blume | 2 diamant
 
-//addressern der Pixel in den einzelnen Bierpong Leuchtfeldern von oben nach unten von links nach rechts
+//Adressen der Pixel in den einzelnen Bierpong Leuchtfeldern im Feld A von oben nach unten von links nach rechts
 const byte FeldA[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{6,7,14,15},{4,5,12,13},{2,3,10,11},{0,1,8,9}};
-const byte FeldB[11][5]={{36,37,39,38},{35,34,28,29},{33,32,30,31},{27,26,16,17},{25,24,18,19},{23,22,20,21},{0,1,14,15},{2,3,12,13},{4,5,10,11},{6,7,8,9}};
+//Adressen der Pixel in den einzelnen Bierpong Leuchtfeldern im Feld B von oben nach unten von rechts nach links
+const byte FeldB[11][5]={{36,37,39,38},{33,32,30,31},{35,34,28,29},{23,22,20,21},{25,24,18,19},{27,26,16,17},{6,7,8,9},{4,5,10,11},{2,3,12,13},{0,1,14,15}};
 
 //faktoren für einzelne Bierpong felder nach dem umstellen
 const byte Blume[11]={0,1,1,1,1,1,0,1,1,0};
